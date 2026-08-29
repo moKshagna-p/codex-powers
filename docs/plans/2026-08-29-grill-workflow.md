@@ -53,4 +53,4 @@
 - Commit: `docs/plans/2026-08-29-grill-workflow.md`
 
 - [x] Review the final diff and commit only the approved documentation files.
-- [ ] Push the current `main` branch to `origin` and verify the local and remote commit IDs match.
+- [x] Push the current `main` branch to `origin` and verify the local and remote commit IDs match.
