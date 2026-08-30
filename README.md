@@ -138,7 +138,37 @@ Ponytail never removes required validation, security, accessibility, data-loss p
 - Use an isolated worktree only when the user authorizes it.
 - Do not create speculative abstractions, dependencies, or scaffolding.
 
-### 5. Verify before saying “done”
+### 5. Hand off long sessions before they become noisy
+
+Use a conservative context budget to protect output quality:
+
+- **60K tokens:** finish the current atomic step and check whether the remaining context is still focused.
+- **80K tokens:** prepare a concise handoff and switch at the next safe milestone.
+- **90K tokens:** start no substantial new work; verify the current state and continue in a fresh task.
+
+These are workflow checkpoints, not model limits. Current GPT-5.6 models support a [1.05M-token context window](https://developers.openai.com/api/docs/models), but long sessions can still accumulate irrelevant or repeated context.
+
+Never invent a token count. When live usage is unavailable, switch after compaction, repeated questions, forgotten constraints, multiple completed or unrelated phases, or before a major new phase following long tool-heavy work.
+
+```mermaid
+flowchart TD
+    A[Focused task] --> B{Context status}
+    B -->|Below 60K| A
+    B -->|60K| C[Finish the current atomic step]
+    C --> D{Still focused?}
+    D -->|Yes and below 80K| A
+    D -->|No or 80K| E[Prepare a concise handoff]
+    E --> F[Verify and record the current state]
+    F --> G{At 90K?}
+    G -->|No| H[Switch at the next safe milestone]
+    G -->|Yes| I[Start no substantial new work]
+    H --> J[Fresh task in the same project]
+    I --> J
+```
+
+The handoff contains the objective and acceptance criteria, settled decisions, current Git state, changed files, verification evidence, blockers, remaining work, and exact next action. Start the fresh task with only that summary plus links to durable plans, `CONTEXT.md`, and ADRs. Do not copy or fork the full conversation.
+
+### 6. Verify before saying “done”
 
 Completion requires fresh evidence appropriate to the change:
 
@@ -151,7 +181,7 @@ Completion requires fresh evidence appropriate to the change:
 
 Passing one check does not imply the others passed. Codex reports the commands actually run and any remaining gaps.
 
-### 6. Keep Git delivery under user control
+### 7. Keep Git delivery under user control
 
 Codex does not initialize repositories, create worktrees, commit, push, merge, or open pull requests without authorization.
 

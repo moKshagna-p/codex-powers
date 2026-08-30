@@ -46,6 +46,16 @@ Use this prompt:
 
 > Rewrite this for **[audience]** using professional-communication. Lead with the decision or request, explain why it matters in plain language, and finish with clear owners and next steps: **[draft]**
 
+## 6. Hand off a long session
+
+Use this prompt near a context checkpoint:
+
+> Monitor this task's context budget. Treat 60K tokens as a quality checkpoint, 80K as the preferred handoff point, and 90K as a hard ceiling. Never invent a token count when live usage is unavailable; instead use compaction, repeated questions, forgotten constraints, multiple completed phases, or a major phase change as handoff signals.
+
+When it is time to switch:
+
+> Finish and verify the current atomic step. Prepare a concise handoff containing the objective and acceptance criteria, settled decisions and constraints, current branch/worktree and Git status, changed files, verification evidence, blockers, remaining steps, and exact next action. Start a fresh task in the same project using only this summary and links to durable plans, CONTEXT.md, and ADRs. Do not copy or fork the full conversation, and do not commit or push unless I authorize it.
+
 ## Daily cadence
 
 1. Choose one outcome, not a vague activity.
