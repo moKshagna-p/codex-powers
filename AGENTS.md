@@ -30,6 +30,12 @@
 - Use `web-design-guidelines` for a UI review, accessibility pass, or UX audit.
 - Keep UI copy concise, direct, and consistent; ask for the intended audience when it changes the wording materially.
 
+## Browser automation
+
+- Prefer the `agent-browser` MCP tools for navigation, extraction, interaction, screenshots, and web testing because their compact snapshots reduce context usage.
+- Use a named, task-specific browser session and re-snapshot after page changes before reusing element references.
+- Fall back to Codex's in-app browser when `agent-browser` is unavailable or the task requires an existing in-app authenticated session or visual browser state.
+
 ## Git and delivery
 
 - Do not initialize a repository, create a worktree, commit, push, or open a pull request unless the user asks.
