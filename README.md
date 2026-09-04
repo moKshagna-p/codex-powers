@@ -59,6 +59,23 @@ sequenceDiagram
 - **Small clear change:** direct implementation using the Ponytail decision ladder.
 - **Completion or integration:** fresh verification → user-approved Git action.
 
+## Skills
+
+Invoke only the skills relevant to the current request. User and project instructions override skill defaults, and `superpowers:using-superpowers` is not a universal gate.
+
+- `grill-me`, `grilling`, and `grill-with-docs`: clarify new projects, consequential decisions, and large ambiguous features.
+- `domain-modeling`: establish shared terminology and durable domain decisions.
+- `ponytail`: choose the smallest correct implementation using existing code, the standard library, or native features first.
+- `superpowers:systematic-debugging`: reproduce failures and prove the root cause before fixing them.
+- `superpowers:brainstorming` and `superpowers:writing-plans`: use only when unresolved design decisions or implementation risk justify them; keep artifacts local unless tracked documentation is requested.
+- `frontend-design` and `web-design-guidelines`: build distinctive UI and review usability, accessibility, responsiveness, and visual hierarchy.
+- `superpowers:test-driven-development`: use when a behavioral change benefits from red-green evidence, not as ceremony for documentation or configuration edits.
+- `superpowers:verification-before-completion`: gather fresh, risk-proportional evidence before declaring completion.
+- `superpowers:finishing-a-development-branch`: perform only the Git delivery actions the user authorized.
+- `professional-communication`: adapt technical writing to its audience and desired outcome.
+
+Skills never independently authorize tracked plans, worktrees, commits, pushes, subagents, merges, or pull requests.
+
 ## Local-only agent artifacts
 
 Plans, Superpowers specs, handoffs, and private context belong under `.codex/` and stay out of the product repository.
