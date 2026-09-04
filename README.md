@@ -1,263 +1,102 @@
 # Codex Powers
 
-A portable Codex workflow for turning an idea into verified, user-approved software without unnecessary code or process.
+A small, portable workflow for building verified software with Codex while keeping session context focused.
 
 It combines:
 
-- **Superpowers** for skill selection, brainstorming, planning, debugging, execution, and verification.
-- **Grill** for stress-testing large ideas before implementation.
-- **Ponytail** for choosing the smallest safe solution.
-- Specialist skills for UI, accessibility, SwiftUI, React, documents, spreadsheets, and other focused work.
+- **Superpowers** for choosing the right development workflow.
+- **Grill** for clarifying large or ambiguous work.
+- **Ponytail** for selecting the smallest safe implementation.
+- **Fresh verification** before completion or Git delivery.
 
-## What is in this repository?
-
-- [`AGENTS.md`](AGENTS.md) — the project-level working agreement Codex follows.
-- [`docs/WORKFLOW.md`](docs/WORKFLOW.md) — copy-ready prompts for common tasks.
-- [`docs/plans/`](docs/plans/) — implementation plans and their completion state.
-
-## Complete workflow
-
-Every request starts with understanding the work, then follows the shortest workflow that safely handles it.
-
-```mermaid
-flowchart TD
-    A[User request] --> B[Check applicable skills]
-    B --> C{What kind of work is it?}
-
-    C -->|New project or large complex feature| D{Existing codebase or durable context needed?}
-    D -->|Yes| E[grill-with-docs]
-    D -->|No| F[grill-me]
-    E --> G[Confirm shared understanding]
-    F --> G
-    G --> H[brainstorming and design approval]
-
-    C -->|Bug or failing test| I[systematic-debugging]
-    I --> J[Prove the root cause]
-
-    C -->|UI build or redesign| K[brainstorming and design approval]
-    K --> L[frontend-design]
-
-    C -->|Small clear change| M[Start directly]
-
-    H --> N{Multi-step or unclear?}
-    N -->|Yes| O[writing-plans]
-    O --> P[Approve important decisions]
-    P --> Q[executing-plans]
-    N -->|No| R[Ponytail decision ladder]
-    Q --> R
-    J --> R
-    L --> R
-    M --> R
-
-    R --> S[Implement the smallest safe change]
-    S --> T[Run fresh verification]
-    T --> U{Checks pass?}
-    U -->|No| I
-    U -->|Yes| V[User-controlled Git delivery]
-```
-
-### 1. Start with Superpowers
-
-`using-superpowers` checks whether a specialized skill should guide the request. The selected process depends on the work instead of forcing every task through the same ceremony.
-
-| Request | Workflow |
-| --- | --- |
-| New project or large context-heavy feature | Grill first, then brainstorm and plan |
-| Multi-file or unclear change | `writing-plans` → approval → `executing-plans` |
-| Bug, test failure, or unexpected behavior | `systematic-debugging` → root cause → smallest fix |
-| UI build or material redesign | `brainstorming` → approval → `frontend-design` |
-| UI, UX, or accessibility review | `web-design-guidelines` |
-| Small, clearly specified change | Implement directly with Ponytail guidance |
-| Completion claim | `verification-before-completion` |
-| Branch integration | `finishing-a-development-branch` |
-
-### 2. Grill only when the work deserves it
-
-Grilling is an intake gate for new projects and large, complicated features—not routine work.
-
-- **`grill-with-docs`** is for an existing codebase or work that future LLM sessions must understand. It combines `grilling` with `domain-modeling`, maintaining `CONTEXT.md` and important architecture decision records when warranted.
-- **`grill-me`** is for a new idea with no repository, or an explicitly conversation-only stress test. It invokes `grilling` but writes no project files.
-- Bugs, maintenance, mechanical edits, and small clear features skip grilling unless the user asks for it.
-
-“Stateless” does not mean the current conversation has no context. It means bare `grill-me` creates no durable project record for a future task to read.
+## Workflow
 
 ```mermaid
 sequenceDiagram
     actor User
     participant Codex
-    participant Grill
-    participant Context as Project context
-    participant Plan
+    participant Discovery
     participant Build
     participant Verify
 
-    User->>Codex: Describe a large project or feature
-    Codex->>Grill: Select documented or stateless grilling
-    alt Existing codebase or durable context needed
-        Grill->>Context: Maintain CONTEXT.md and ADRs
-    else No repository or conversation-only request
-        Grill-->>Codex: Keep conclusions in this conversation
+    User->>Codex: Describe one outcome
+    Codex->>Codex: Select only relevant skills and tools
+    alt Large or ambiguous work
+        Codex->>Discovery: Grill, resolve decisions, then plan
+        Discovery-->>User: Confirm goal, constraints, and success
+    else Bug or unexpected behavior
+        Codex->>Discovery: Reproduce and prove root cause
+    else Small clear change
+        Codex->>Build: Start directly
     end
-    Grill->>User: Ask decision-focused questions
-    User-->>Grill: Confirm shared understanding
-    Codex->>User: Present the design
-    User-->>Codex: Approve or revise
-    Codex->>Plan: Create an implementation plan when needed
-    Plan->>Build: Execute small verifiable steps
-    Build->>Verify: Run tests, type-check, lint, and build
-    Verify-->>User: Report fresh evidence and delivery choices
+    Discovery->>Build: Implement the smallest safe change
+    Build->>Verify: Run relevant checks
+    alt Checks fail
+        Verify->>Discovery: Diagnose with evidence
+    else Checks pass
+        Verify-->>User: Report results and requested Git delivery
+    end
 ```
 
-### 3. Apply Ponytail before writing code
+## Core rules
 
-Ponytail keeps implementation deliberately boring. Stop at the first option that safely solves the real problem.
+- **One outcome per task.** Start fresh when the outcome changes or the context becomes noisy.
+- **Use the lightest workflow that fits.** Small changes start directly; risky or ambiguous work gets discovery and planning.
+- **Resolve the nearest unknown first.** Do not write detailed plans past unsettled decisions.
+- **Prefer references over pasted context.** Point Codex to an existing file, example, or URL when possible.
+- **Implement minimally.** Reuse project code, the standard library, native features, or installed dependencies before adding code.
+- **Verify with evidence.** Run the checks appropriate to the change and report their actual results.
+- **Keep Git user-controlled.** Codex commits, pushes, merges, or opens a PR only when explicitly requested.
 
-```mermaid
-flowchart TD
-    A{Does this code need to exist?} -->|No| Z[Skip it]
-    A -->|Yes| B{Does the codebase already solve it?}
-    B -->|Yes| C[Reuse existing code]
-    B -->|No| D{Can the standard library solve it?}
-    D -->|Yes| E[Use the standard library]
-    D -->|No| F{Does the native platform solve it?}
-    F -->|Yes| G[Use the native feature]
-    F -->|No| H{Does an installed dependency solve it?}
-    H -->|Yes| I[Reuse the dependency]
-    H -->|No| J{Can it be one safe line?}
-    J -->|Yes| K[Write one line]
-    J -->|No| L[Write the minimum safe implementation]
-```
+## Request routing
 
-Ponytail never removes required validation, security, accessibility, data-loss protection, error handling, or tests.
+- **New project or large ambiguous feature:** Grill → approved design → plan when needed → implementation.
+- **Bug or failing test:** reproduce → root cause → smallest fix → regression check.
+- **UI build or redesign:** approved design → `frontend-design` → visual and accessibility checks.
+- **UI or accessibility review:** `web-design-guidelines`.
+- **Small clear change:** direct implementation using the Ponytail decision ladder.
+- **Completion or integration:** fresh verification → user-approved Git action.
 
-### 4. Plan and implement proportionally
+## Local-only agent artifacts
 
-- Use a written plan for multi-file work or unclear requirements.
-- Review product, architecture, and hard-to-reverse decisions before implementation.
-- Execute the approved plan in small independently verifiable steps.
-- Use an isolated worktree only when the user authorizes it.
-- Do not create speculative abstractions, dependencies, or scaffolding.
+Plans, Superpowers specs, handoffs, and private context belong under `.codex/` and stay out of the product repository.
 
-### 5. Hand off long sessions before they become noisy
+- Add `/.codex/` to `.git/info/exclude` for each project.
+- Never stage, commit, or push agent-only documents.
+- A handoff should contain the objective, settled decisions, Git state, changed files, verification evidence, blockers, and exact next action.
+- Start a fresh task from the concise handoff instead of copying the full conversation.
 
-Use a conservative context budget to protect output quality:
-
-- **60K tokens:** finish the current atomic step and check whether the remaining context is still focused.
-- **80K tokens:** prepare a concise handoff and switch at the next safe milestone.
-- **90K tokens:** start no substantial new work; verify the current state and continue in a fresh task.
-
-These are workflow checkpoints, not model limits. Current GPT-5.6 models support a [1.05M-token context window](https://developers.openai.com/api/docs/models), but long sessions can still accumulate irrelevant or repeated context.
-
-Never invent a token count. When live usage is unavailable, switch after compaction, repeated questions, forgotten constraints, multiple completed or unrelated phases, or before a major new phase following long tool-heavy work.
-
-```mermaid
-flowchart TD
-    A[Focused task] --> B{Context status}
-    B -->|Below 60K| A
-    B -->|60K| C[Finish the current atomic step]
-    C --> D{Still focused?}
-    D -->|Yes and below 80K| A
-    D -->|No or 80K| E[Prepare a concise handoff]
-    E --> F[Verify and record the current state]
-    F --> G{At 90K?}
-    G -->|No| H[Switch at the next safe milestone]
-    G -->|Yes| I[Start no substantial new work]
-    H --> J[Fresh task in the same project]
-    I --> J
-```
-
-The handoff contains the objective and acceptance criteria, settled decisions, current Git state, changed files, verification evidence, blockers, remaining work, and exact next action. Start the fresh task with only that summary plus links to durable plans, `CONTEXT.md`, and ADRs. Do not copy or fork the full conversation.
-
-### 6. Verify before saying “done”
-
-Completion requires fresh evidence appropriate to the change:
-
-- Tests for behavior.
-- Type-checking for type safety.
-- Linting for static issues.
-- A build for compilation and packaging.
-- Focused reproduction checks for fixed bugs.
-- Visual and accessibility checks for UI changes.
-
-Passing one check does not imply the others passed. Codex reports the commands actually run and any remaining gaps.
-
-### 7. Keep Git delivery under user control
-
-Codex does not initialize repositories, create worktrees, commit, push, merge, or open pull requests without authorization.
-
-```mermaid
-flowchart TD
-    A[Fresh verification] --> B{Relevant checks pass?}
-    B -->|No| C[Diagnose and fix]
-    C --> A
-    B -->|Yes| D{Did the user authorize a Git action?}
-    D -->|No| E[Report evidence and leave changes in place]
-    D -->|Yes| F{Requested delivery}
-    F -->|Commit| G[Commit reviewed files]
-    F -->|Push| H[Commit and push the requested branch]
-    F -->|Pull request| I[Push and open a PR]
-    F -->|Merge locally| J[Merge, verify again, then clean up]
-    F -->|Keep branch| K[Preserve the branch and worktree]
-```
+This repository also ignores the historical `docs/plans/` and `docs/superpowers/` locations.
 
 ## Quick start
 
-1. Copy [`AGENTS.md`](AGENTS.md) into the root of your project.
-2. Optionally copy [`docs/WORKFLOW.md`](docs/WORKFLOW.md) into its `docs/` directory.
-3. Install the Superpowers and Ponytail plugins in Codex.
-4. Install these four folders from [`mattpocock/skills`](https://github.com/mattpocock/skills) using Codex's built-in `skill-installer`:
-   - `skills/productivity/grill-me`
-   - `skills/productivity/grilling`
-   - `skills/engineering/grill-with-docs`
-   - `skills/engineering/domain-modeling`
-5. Open the project in Codex and describe the outcome you want.
+1. Copy the compact rules from [`AGENTS.md`](AGENTS.md) into the project.
+2. Put reusable global rules in `~/.codex/AGENTS.md`; keep project rules project-specific.
+3. Install Superpowers and the Grill skills you use.
+4. Keep specialist plugins disabled until a task needs them.
+5. Open the project in Codex and describe one concrete outcome.
 
-You can ask Codex to install the Grill skills with:
+Useful Grill skills from [`mattpocock/skills`](https://github.com/mattpocock/skills):
 
-> Use skill-installer to install grill-me, grilling, grill-with-docs, and domain-modeling from mattpocock/skills.
-
-## Ponytail installation
-
-```sh
-codex plugin marketplace add DietrichGebert/ponytail
-codex plugin add ponytail@ponytail
-```
-
-Open `/hooks` in Codex, review and trust Ponytail's lifecycle hooks, then restart the app. The fallback Ponytail rules in [`AGENTS.md`](AGENTS.md) still apply if the hooks are unavailable.
+- `skills/productivity/grill-me`
+- `skills/productivity/grilling`
+- `skills/engineering/grill-with-docs`
+- `skills/engineering/domain-modeling`
 
 ## Example requests
 
-Large feature:
+- **Large feature:** “Use grill-with-docs to clarify this feature. Confirm our shared understanding before designing or planning it.”
+- **Conversation-only idea:** “Use grill-me to stress-test this idea without creating project files.”
+- **Bug:** “Reproduce this issue, prove the root cause, then implement and verify the smallest fix.”
+- **Small change:** “Implement this directly. Reuse existing code and run the smallest relevant verification.”
 
-> Use grill-with-docs to clarify this feature and preserve the domain context. Once we confirm shared understanding, brainstorm the design and wait for approval before planning implementation.
+More copy-ready prompts are in [`docs/WORKFLOW.md`](docs/WORKFLOW.md).
 
-Conversation-only idea:
+## Influences
 
-> Use grill-me to stress-test this idea. Keep it stateless and do not create project files.
-
-Bug:
-
-> Use systematic-debugging. Reproduce the problem, prove the root cause, then implement and verify the smallest root-cause fix.
-
-Small feature:
-
-> Implement this directly using Ponytail's decision ladder. Reuse existing code and run the smallest relevant verification.
-
-See [`docs/WORKFLOW.md`](docs/WORKFLOW.md) for more copy-ready prompts.
-
-## Use in another project
-
-```sh
-cp /path/to/codex-powers/AGENTS.md /path/to/your-project/AGENTS.md
-mkdir -p /path/to/your-project/docs
-cp /path/to/codex-powers/docs/WORKFLOW.md /path/to/your-project/docs/WORKFLOW.md
-```
-
-Adapt the UI, Git, and verification rules to the project's stack. Keep user control over commits, pushes, pull requests, and destructive actions.
-
-## Contributing
-
-Keep the workflow short, concrete, and tool-agnostic where possible. Prefer existing capabilities and the native platform before adding dependencies.
+- [Theo Browne's AI coding workflow](https://www.youtube.com/watch?v=xJaMTo2YgO8): focused tasks, concrete references, and active steering.
+- [Matt Pocock's writing-for-agents guidance](https://github.com/mattpocock/skills/blob/main/docs/productivity/writing-for-agents.md): progressive disclosure and one source of truth.
+- [OpenAI model guidance](https://developers.openai.com/api/docs/guides/latest-model): lean prompts and relevant tools.
 
 ## License
 
