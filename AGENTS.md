@@ -10,5 +10,5 @@
 - Use `frontend-design` for UI builds or redesigns and `web-design-guidelines` for UI, UX, or accessibility reviews.
 - Prefer `agent-browser`; use the in-app browser when authenticated or visual state matters.
 - Add workflow rules only after repeated observed failures, and keep each rule in one place.
-- Use concise descriptive kebab-case branch names; never add `codex/` or another agent/tool prefix.
+- Name branches `<type>/<short-kebab-case-description>` from the requested work: `fix/`, `feat/`, `ui/`, `docs/`, `refactor/`, `test/`, or `chore/`. Never use an agent/tool prefix.
 - Do not initialize repositories, create worktrees, commit, push, merge, or open pull requests unless the user asks.

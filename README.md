@@ -47,6 +47,7 @@ sequenceDiagram
 - **Implement minimally.** Reuse project code, the standard library, native features, or installed dependencies before adding code.
 - **Verify with evidence.** Run the checks appropriate to the change and report their actual results.
 - **Keep Git user-controlled.** Codex commits, pushes, merges, or opens a PR only when explicitly requested.
+- **Name branches by intent.** Use `<type>/<short-description>` with `fix`, `feat`, `ui`, `docs`, `refactor`, `test`, or `chore` based on the requested work.
 
 ## Request routing
 
