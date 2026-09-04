@@ -28,17 +28,17 @@ Use this prompt:
 
 After the diagnosis:
 
-> Implement the smallest root-cause fix. Add a regression test where practical, then run the affected tests and full relevant checks.
+> Implement the smallest root-cause fix. Add a meaningful regression test where practical, then run the focused affected checks. Broaden the suite only for integration requirements, new changes, failures, or unresolved risk.
 
 ## 4. Finish safely
 
 Use this prompt:
 
-> Before calling this complete, use verification-before-completion. Run the precise tests, type-check, lint, and build that prove the acceptance criteria. Report the command output and any remaining gap.
+> Before calling this complete, use verification-before-completion. Run the smallest set of checks that proves the acceptance criteria: meaningful tests for behavior, or parse, diff, link, and configuration checks for docs and config. Report the actual results and any remaining gap.
 
 When the work is ready to ship:
 
-> Use finishing-a-development-branch. Verify the full test suite first, then present the available integration options. Do not commit, push, or merge without asking me.
+> Use finishing-a-development-branch. Verify at the breadth justified by integration risk, then present the available integration options. Do not commit, push, or merge unless I have explicitly requested that action.
 
 ## 5. Write clearly
 

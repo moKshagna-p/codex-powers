@@ -41,19 +41,20 @@ sequenceDiagram
 ## Core rules
 
 - **One outcome per task.** Start fresh when the outcome changes or the context becomes noisy.
+- **Infer acceptance criteria.** Identify the requested outcome, constraints, permitted side effects, and proof of success; ask only about ambiguities that could materially change the result.
 - **Use the lightest workflow that fits.** Small changes start directly; risky or ambiguous work gets discovery and planning.
 - **Resolve the nearest unknown first.** Do not write detailed plans past unsettled decisions.
 - **Prefer references over pasted context.** Point Codex to an existing file, example, or URL when possible.
 - **Implement minimally.** Reuse project code, the standard library, native features, or installed dependencies before adding code.
-- **Verify with evidence.** Run the checks appropriate to the change and report their actual results.
+- **Verify in proportion to risk.** Test behavior changes meaningfully; use parse, diff, link, or configuration checks for docs and config. Broaden suites only when integration or unresolved risk warrants it.
 - **Keep Git user-controlled.** Codex commits, pushes, merges, or opens a PR only when explicitly requested.
 - **Name branches by intent.** Use `<type>/<short-description>` with `fix`, `feat`, `ui`, `docs`, `refactor`, `test`, or `chore` based on the requested work.
 
 ## Request routing
 
-- **New project or large ambiguous feature:** Grill → approved design → plan when needed → implementation.
+- **New project or large ambiguous feature:** Grill → resolve consequential decisions → plan when needed → implementation.
 - **Bug or failing test:** reproduce → root cause → smallest fix → regression check.
-- **UI build or redesign:** approved design → `frontend-design` → visual and accessibility checks.
+- **UI build or redesign:** inspect existing patterns → `frontend-design` → visual and accessibility checks.
 - **UI or accessibility review:** `web-design-guidelines`.
 - **Small clear change:** direct implementation using the Ponytail decision ladder.
 - **Completion or integration:** fresh verification → user-approved Git action.
@@ -69,10 +70,23 @@ Plans, Superpowers specs, handoffs, and private context belong under `.codex/` a
 
 This repository also ignores the historical `docs/plans/` and `docs/superpowers/` locations.
 
+## Automatic context rollover
+
+For long Codex desktop tasks, set an explicit compaction threshold in `~/.codex/config.toml`:
+
+```toml
+model_auto_compact_token_limit = 50000
+model_auto_compact_token_limit_scope = "total"
+```
+
+Pair that setting with a global `~/.codex/AGENTS.md` rule that treats compaction as standing authorization to finish the current atomic step, write an ignored `.codex/handoffs/` summary, and create exactly one fresh task in the same saved project and local checkout. The continuation prompt should reference the handoff, Git state, verification evidence, and exact next action; record the successor task ID to prevent duplicates.
+
+This rollover requires the Codex desktop task-creation capability. If it is unavailable, continue safely in the compacted task instead. Codex documents the [compaction threshold](https://learn.chatgpt.com/docs/config-file/config-reference) and [new-task API](https://learn.chatgpt.com/docs/app-server).
+
 ## Quick start
 
-1. Copy the compact rules from [`AGENTS.md`](AGENTS.md) into the project.
-2. Put reusable global rules in `~/.codex/AGENTS.md`; keep project rules project-specific.
+1. Use the core rules above as a starting point for `~/.codex/AGENTS.md`.
+2. Keep each repository's `AGENTS.md` limited to project-specific constraints.
 3. Install Superpowers and the Grill skills you use.
 4. Keep specialist plugins disabled until a task needs them.
 5. Open the project in Codex and describe one concrete outcome.
