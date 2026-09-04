@@ -4,11 +4,11 @@
 
 Use this prompt:
 
-> I want to build **[feature]**. Use the writing-plans skill. First inspect the project and ask only questions that materially affect the design. Save the plan to `docs/plans/` and do not edit code yet.
+> I want to build **[feature]**. First inspect the project and ask only questions that materially affect the design. For multi-step, risky, decision-heavy, or multi-session work, save a local-only plan to `.codex/plans/`; otherwise present the short approach in chat. Do not edit code yet.
 
 Review the plan. Then say:
 
-> Implement the approved plan using executing-plans. Work task by task, run the listed checks, and stop if a decision changes the agreed scope.
+> Implement the approved plan. Work task by task, run the listed checks, and stop if an unresolved decision changes the agreed scope.
 
 ## 2. Build or improve UI
 
@@ -50,16 +50,16 @@ Use this prompt:
 
 Use this prompt near a context checkpoint:
 
-> Monitor this task's context budget. Treat 60K tokens as a quality checkpoint, 80K as the preferred handoff point, and 90K as a hard ceiling. Never invent a token count when live usage is unavailable; instead use compaction, repeated questions, forgotten constraints, multiple completed phases, or a major phase change as handoff signals.
+> Keep one outcome in this task. At a long tool-heavy phase boundary, after compaction, or when the context becomes noisy, finish the current atomic step and prepare a local-only handoff under `.codex/handoffs/`.
 
 When it is time to switch:
 
-> Finish and verify the current atomic step. Prepare a concise handoff containing the objective and acceptance criteria, settled decisions and constraints, current branch/worktree and Git status, changed files, verification evidence, blockers, remaining steps, and exact next action. Start a fresh task in the same project using only this summary and links to durable plans, CONTEXT.md, and ADRs. Do not copy or fork the full conversation, and do not commit or push unless I authorize it.
+> Finish and verify the current atomic step. Record the goal, acceptance criteria, settled decisions, Git status, changed files, verification evidence, blockers, and exact next action. Start a fresh task using only that handoff and its local context links. Never copy the conversation or commit/push agent artifacts.
 
 ## Daily cadence
 
 1. Choose one outcome, not a vague activity.
-2. Plan only multi-step or risky work; start small tasks directly.
+2. Plan only multi-step, risky, decision-heavy, or multi-session work; start small tasks directly.
 3. Build in short, testable increments.
 4. Diagnose evidence-first when something breaks.
 5. Verify before saying "done."

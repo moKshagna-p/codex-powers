@@ -8,3 +8,8 @@ build/
 coverage/
 .worktrees/
 worktrees/
+
+# Local agent work; never commit or push.
+/.codex/
+/docs/plans/
+/docs/superpowers/
