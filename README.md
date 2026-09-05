@@ -23,7 +23,7 @@ sequenceDiagram
     Codex->>Codex: Select only relevant skills and tools
     alt Large or ambiguous work
         Codex->>Discovery: Grill, resolve decisions, then plan
-        Discovery-->>User: Confirm goal, constraints, and success
+        Discovery-->>User: Summarize alignment; ask only consequential questions
     else Bug or unexpected behavior
         Codex->>Discovery: Reproduce and prove root cause
     else Small clear change
@@ -40,7 +40,8 @@ sequenceDiagram
 
 ## Core rules
 
-- **One outcome per task.** Start fresh when the outcome changes or the context becomes noisy.
+- **One outcome per task.** Keep a concise checkpoint when context becomes noisy; continue the same outcome through compaction.
+- **Finish the requested outcome.** Continue through implementation and relevant verification; stop at discovery or review only when requested.
 - **Infer acceptance criteria.** Identify the requested outcome, constraints, permitted side effects, and proof of success; ask only about ambiguities that could materially change the result.
 - **Use the lightest workflow that fits.** Small changes start directly; risky or ambiguous work gets discovery and planning.
 - **Resolve the nearest unknown first.** Do not write detailed plans past unsettled decisions.
@@ -74,7 +75,7 @@ Invoke only the skills relevant to the current request. User and project instruc
 - `superpowers:finishing-a-development-branch`: perform only the Git delivery actions the user authorized.
 - `professional-communication`: adapt technical writing to its audience and desired outcome.
 
-Skills never independently authorize tracked plans, worktrees, commits, pushes, subagents, merges, or pull requests.
+The global `~/.codex/AGENTS.md` owns operating policy, including overrides for universal skill invocation and mandatory approval steps. Audit installed skills after updates for conflicts with that policy. Skills never independently authorize tracked plans, worktrees, commits, pushes, subagents, merges, or pull requests.
 
 ## Local-only agent artifacts
 
@@ -83,22 +84,19 @@ Plans, Superpowers specs, handoffs, and private context belong under `.codex/` a
 - Add `/.codex/` to `.git/info/exclude` for each project.
 - Never stage, commit, or push agent-only documents.
 - A handoff should contain the objective, settled decisions, Git state, changed files, verification evidence, blockers, and exact next action.
-- Start a fresh task from the concise handoff instead of copying the full conversation.
+- Continue the same task from the checkpoint. Create a fresh task only when requested, using the handoff instead of copied conversation history.
 
 This repository also ignores the historical `docs/plans/` and `docs/superpowers/` locations.
 
-## Automatic context rollover
+## Astra setup and context trial
 
-For long Codex desktop tasks, set an explicit compaction threshold in `~/.codex/config.toml`:
+[OpenAI’s Astra guidance](https://developers.openai.com/api/docs/guides/latest-model) recommends auditing conflicting instructions, encouraging end-to-end execution, tuning delegation explicitly, and keeping verification proportional to the change.
 
-```toml
-model_auto_compact_token_limit = 50000
-model_auto_compact_token_limit_scope = "total"
-```
+This setup keeps the existing `low` reasoning effort as a baseline. Increase it for difficult tasks when the results justify it. Subagents remain opt-in; authorize bounded independent research or review when useful.
 
-Pair that setting with a global `~/.codex/AGENTS.md` rule that treats compaction as standing authorization to finish the current atomic step, write an ignored `.codex/handoffs/` summary, and create exactly one fresh task in the same saved project and local checkout. The continuation prompt should reference the handoff, Git state, verification evidence, and exact next action; record the successor task ID to prevent duplicates.
+For the context trial, retain the existing 50,000-token compaction setting but continue the same task after compaction, using a concise local checkpoint when needed. The threshold is a personal setting, not an Astra requirement. Automatic compaction no longer triggers task creation.
 
-This rollover requires the Codex desktop task-creation capability. If it is unavailable, continue safely in the compacted task instead. Codex documents the [compaction threshold](https://learn.chatgpt.com/docs/config-file/config-reference) and [new-task API](https://learn.chatgpt.com/docs/app-server).
+Compare the next few substantial tasks for repeated discovery, lost decisions, unnecessary questions, verification quality, and completion time before changing the threshold or adding more workflow rules.
 
 ## Quick start
 
@@ -117,7 +115,7 @@ Useful Grill skills from [`mattpocock/skills`](https://github.com/mattpocock/ski
 
 ## Example requests
 
-- **Large feature:** “Use grill-with-docs to clarify this feature. Confirm our shared understanding before designing or planning it.”
+- **Large feature:** “Clarify consequential decisions using grill-with-docs, plan when needed, then implement and verify this feature. Ask only about decisions that materially change the result.”
 - **Conversation-only idea:** “Use grill-me to stress-test this idea without creating project files.”
 - **Bug:** “Reproduce this issue, prove the root cause, then implement and verify the smallest fix.”
 - **Small change:** “Implement this directly. Reuse existing code and run the smallest relevant verification.”

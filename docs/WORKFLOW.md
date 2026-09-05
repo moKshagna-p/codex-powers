@@ -1,73 +1,77 @@
 # Personal Codex Workflow
 
-## 1. Start a feature
+## 1. Implement an outcome
 
-Use this prompt:
+Use this as the default prompt:
 
-> I want to build **[feature]**. First inspect the project and ask only questions that materially affect the design. For multi-step, risky, decision-heavy, or multi-session work, save a local-only plan to `.codex/plans/`; otherwise present the short approach in chat. Do not edit code yet.
+> Implement **[outcome]**. Start with **[reference path, example, or URL]**. Success means **[observable acceptance criteria]**. Inspect the existing implementation, resolve routine details, and continue through implementation and relevant verification. Ask only when the answer materially changes scope or correctness; continue independent work while waiting. Plan locally under `.codex/plans/` when the work is multi-step, risky, decision-heavy, or spans sessions. Report changes, verification, and remaining gaps. Follow the existing Git authorization rules.
 
-Review the plan. Then say:
+For a new project or large ambiguous feature, add:
 
-> Implement the approved plan. Work task by task, run the listed checks, and stop if an unresolved decision changes the agreed scope.
+> Use grill-with-docs when durable context helps, otherwise grill-me, to resolve consequential decisions first. Summarize our goal, constraints, non-goals, and success criteria, then continue once those decisions are settled.
+
+When you want discovery only, say so explicitly:
+
+> Inspect **[idea]**, clarify the consequential decisions, and propose an implementation plan. Do not edit code yet.
 
 ## 2. Build or improve UI
 
-Use this prompt:
-
-> Build **[screen/component]** using frontend-design. Match the existing design system, make it responsive and accessible, and explain the UX decisions briefly. Run the relevant checks.
+> Build **[screen/component]** using frontend-design. Match the existing design system, make it responsive and accessible, and explain the UX decisions briefly. Implement and run the relevant checks.
 
 For an existing screen:
 
-> Review **[screen/component]** using web-design-guidelines. Prioritize the five highest-impact usability, accessibility, visual-hierarchy, and responsive-design issues. Then implement only the fixes I approve.
+> Review **[screen/component]** using web-design-guidelines and fix the highest-impact usability, accessibility, visual-hierarchy, and responsive-design issues within **[scope]**. Verify the result. Ask before changes that materially alter the intended design or behavior.
+
+For a critique only:
+
+> Review **[screen/component]** and prioritize the five highest-impact issues. Do not implement changes yet.
 
 ## 3. Fix a bug
 
-Use this prompt:
+> Fix **[symptom]** using systematic-debugging. Reproduce it, inspect recent changes and relevant data flow, and establish the root cause with evidence. Then implement the smallest root-cause fix and add a meaningful regression test where practical. Run the focused affected checks. Broaden the suite only for integration requirements, new changes, failures, or unresolved risk. Continue from diagnosis through verification without waiting for a separate implementation prompt.
 
-> Debug **[symptom]** using systematic-debugging. Reproduce it, inspect recent changes and relevant data flow, state the root-cause hypothesis with evidence, and do not make a fix until then.
+## 4. Verify and deliver
 
-After the diagnosis:
+Verification is part of implementation. Use this when checking existing work:
 
-> Implement the smallest root-cause fix. Add a meaningful regression test where practical, then run the focused affected checks. Broaden the suite only for integration requirements, new changes, failures, or unresolved risk.
+> Use verification-before-completion. Run the smallest set of checks that proves the acceptance criteria: meaningful tests for behavior, or parse, diff, link, and configuration checks for docs and config. Report the actual results and any remaining gap. Do not repeat passing checks without a concrete reason.
 
-## 4. Finish safely
+When you want integration advice:
 
-Use this prompt:
-
-> Before calling this complete, use verification-before-completion. Run the smallest set of checks that proves the acceptance criteria: meaningful tests for behavior, or parse, diff, link, and configuration checks for docs and config. Report the actual results and any remaining gap.
-
-When the work is ready to ship:
-
-> Use finishing-a-development-branch. Verify at the breadth justified by integration risk, then present the available integration options. Do not commit, push, or merge unless I have explicitly requested that action.
+> Use finishing-a-development-branch to assess readiness and present the relevant integration options. Perform Git delivery actions only when I explicitly request them; do not ask again for actions already authorized.
 
 ## 5. Write clearly
 
-Use this prompt:
-
 > Rewrite this for **[audience]** using professional-communication. Lead with the decision or request, explain why it matters in plain language, and finish with clear owners and next steps: **[draft]**
 
-## 6. Hand off a long session
+## 6. Continue a long task
 
-Use this prompt near a context checkpoint:
+> Keep one outcome in this task. At a long phase boundary or after compaction, finish the current atomic step and update a concise local checkpoint under `.codex/handoffs/` when needed. Record the goal, acceptance criteria, settled decisions, Git status, changed files, verification evidence, blockers, and exact next action. Continue in this task from that checkpoint without repeating completed work. Never copy conversation history or commit/push agent artifacts.
 
-> Keep one outcome in this task. At a long tool-heavy phase boundary, after compaction, or when the context becomes noisy, finish the current atomic step and prepare a local-only handoff under `.codex/handoffs/`.
+Compaction alone does not require a new task. When you explicitly want to switch:
 
-When it is time to switch:
+> Update the checkpoint, then create one new task in this saved project using the local checkout. Ask it to continue from **[handoff path]**, project instructions, Git state, changed files, verification evidence, and the exact next action. Record the successor task ID in the checkpoint.
 
-> Finish and verify the current atomic step. Record the goal, acceptance criteria, settled decisions, Git status, changed files, verification evidence, blockers, and exact next action. Start a fresh task using only that handoff and its local context links. Never copy the conversation or commit/push agent artifacts.
+This task-creation prompt is specific to the Codex desktop app.
+
+## 7. Authorize delegation when useful
+
+Subagents are opt-in. Add this to a task when independent work would help:
+
+> You may use subagents for bounded independent research or review when useful. Keep implementation ownership clear and verify findings before integrating them.
+
+## Astra baseline and trial
+
+The operating rules live in `~/.codex/AGENTS.md`; these prompts are examples. Installed skill defaults must follow that policy, including its limits on mandatory approval steps and verification. Recheck conflicts after skill updates rather than editing cached plugin copies.
+
+[OpenAI’s Astra guidance](https://developers.openai.com/api/docs/guides/latest-model) supports explicit end-to-end execution, instruction audits, deliberate delegation, and proportional verification. Preserve the current `low` reasoning effort initially and increase it for difficult tasks when needed.
+
+Our context experiment retains the existing 50,000-token compaction setting and replaces automatic task rollover with continuation from local checkpoints. That threshold is a personal choice, not a model requirement. Over the next few substantial tasks, compare repeated discovery, lost decisions, unnecessary questions, verification quality, and completion time. Adjust based on observed failures.
 
 ## Daily cadence
 
-1. Choose one outcome, not a vague activity.
-2. Plan only multi-step, risky, decision-heavy, or multi-session work; start small tasks directly.
-3. Build in short, testable increments.
-4. Diagnose evidence-first when something breaks.
-5. Verify before saying "done."
-
-## Useful one-line requests
-
-- "Turn this idea into an implementation plan; don’t code yet."
-- "Give this UI a design and accessibility critique, then wait for approval."
-- "Find the root cause; don’t guess a fix."
-- "Verify this is ready to ship with fresh evidence."
-- "Write this update for a non-technical stakeholder."
+1. Describe one outcome with a concrete reference and observable success criteria.
+2. Resolve consequential decisions; plan only when warranted.
+3. Continue through implementation and proportional verification.
+4. Preserve decisions in a checkpoint when needed and keep working in the same task.
+5. Report the result and perform only authorized Git delivery.
