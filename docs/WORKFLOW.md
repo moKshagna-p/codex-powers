@@ -60,6 +60,47 @@ Subagents are opt-in. Add this to a task when independent work would help:
 
 > You may use subagents for bounded independent research or review when useful. Keep implementation ownership clear and verify findings before integrating them.
 
+## 8. Trial Headroom context compression
+
+Use this optional trial when large tool results dominate context. Start with a representative task and a comparable unwrapped baseline. Keep the model, reasoning effort, acceptance criteria, and compaction threshold fixed so the comparison is useful.
+
+The [upstream Headroom README](https://github.com/headroomlabs-ai/headroom#get-started-60-seconds) documents installation and agent wrapping. The following is a **Codex CLI** example, requiring `uv` and an already working `codex` command:
+
+```sh
+uv tool install --python 3.13 "headroom-ai[proxy,code]"
+headroom wrap codex --code-memory none
+```
+
+Run the wrapper from the target project for each trial session. `--code-memory none` skips the default Serena installation. Wrapping starts a local proxy and configures the launched agent to use it; review any durable configuration changes. Keep shared memory, automatic instruction learning, and output shaping outside this initial compression trial.
+
+In another terminal while the session is running:
+
+```sh
+headroom doctor
+headroom perf
+headroom dashboard
+```
+
+Confirm actual traffic reaches the proxy. An installed package or successful health check alone does not prove the session is compressed. Desktop routing has not been validated here; the CLI example does not establish that an existing desktop conversation uses Headroom. Consult [OpenAI's provider configuration documentation](https://developers.openai.com/codex/config-advanced) before attempting a separate desktop setup.
+
+Copy-ready trial prompt:
+
+> Complete **[outcome]** using the existing workflow in this Headroom-wrapped session. Preserve exact source and test evidence; retrieve original content whenever compressed output leaves a consequential detail unclear. Keep checkpoints under `.codex/` when needed. Report verification results, observed token usage, elapsed time, retrieval failures, and any lost details. Compare with **[baseline task or measurements]**; do not infer savings from advertised benchmarks.
+
+Headroom caches originals for retrieval within its configured retention period. Keep source files and raw verification evidence available independently. Adopt it routinely only if comparable tasks use fewer tokens without worse correctness, retries, or completion time; reduced tokens alone do not establish lower billed cost.
+
+To roll back durable Codex wrapping, exit the trial session and run:
+
+```sh
+headroom unwrap codex
+```
+
+Then launch Codex normally and verify its routing and settings.
+
+Local validation with Headroom 0.37.0: installation succeeded, and a synthetic JSON report containing 300 test results compressed from 10,212 to 3,627 tokens (64.5% removed). The single failure remained visible and an explicitly cached original was retrieved exactly. This library check used `protect_recent=0` and disabled ML compression; it does not establish default proxy behavior, live Codex routing, or billed savings.
+
+Prioritize large test reports, repetitive logs, and structured search results for the first comparison. Keep failure learning in preview mode: the local preview could not complete because Codex CLI 0.147.0 was rejected for Astra, and its scan included sessions from other projects despite the project argument. Validate project scoping and update the CLI before using its recommendations. Do not apply generated workflow rules automatically.
+
 ## Astra baseline and trial
 
 The operating rules live in `~/.codex/AGENTS.md`; these prompts are examples. Installed skill defaults must follow that policy, including its limits on mandatory approval steps and verification. Recheck conflicts after skill updates rather than editing cached plugin copies.

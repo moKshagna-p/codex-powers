@@ -8,6 +8,7 @@ It combines:
 - **Grill** for clarifying large or ambiguous work.
 - **Ponytail** for selecting the smallest safe implementation.
 - **Fresh verification** before completion or Git delivery.
+- **Optional Headroom trial** for reducing large tool outputs before they enter model context.
 
 ## Workflow
 
@@ -105,6 +106,10 @@ Compare the next few substantial tasks for repeated discovery, lost decisions, u
 3. Install Superpowers and the Grill skills you use.
 4. Keep specialist plugins disabled until a task needs them.
 5. Open the project in Codex and describe one concrete outcome.
+
+### Optional context compression
+
+[Headroom](https://github.com/headroomlabs-ai/headroom) provides local compression and a Codex CLI wrapper. Trial it on tasks with large logs or repetitive tool results, keeping the current compaction and checkpoint workflow. Measure correctness, token usage, and completion time before adopting it routinely. See the [setup, trial prompt, and rollback](docs/WORKFLOW.md#8-trial-headroom-context-compression). This repository documents the integration; it does not enable it in the Codex desktop app.
 
 Useful Grill skills from [`mattpocock/skills`](https://github.com/mattpocock/skills):
 
