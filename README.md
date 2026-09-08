@@ -24,7 +24,7 @@ sequenceDiagram
     Codex->>Codex: Select only relevant skills and tools
     alt Large or ambiguous work
         Codex->>Discovery: Grill, resolve decisions, then plan
-        Discovery-->>User: Summarize alignment; ask only consequential questions
+        Discovery-->>User: Summarize alignment and ask only consequential questions
     else Bug or unexpected behavior
         Codex->>Discovery: Reproduce and prove root cause
     else Small clear change
