@@ -44,7 +44,7 @@ sequenceDiagram
 - **One outcome per task.** Keep a concise checkpoint when context becomes noisy; continue the same outcome through compaction.
 - **Finish the requested outcome.** Continue through implementation and relevant verification; stop at discovery or review only when requested.
 - **Infer acceptance criteria.** Identify the requested outcome, constraints, permitted side effects, and proof of success; ask only about ambiguities that could materially change the result.
-- **Use the lightest workflow that fits.** Small changes start directly; risky or ambiguous work gets focused discovery. Planning is explicit opt-in.
+- **Use the lightest workflow that fits.** Small, clear, low-risk changes default to direct implementation by the lead and relevant checks. Separate planning, agent handoffs, and independent review need a concrete benefit or explicit request. Small changes can still carry high risk; planning and delegation remain opt-in.
 - **Resolve the nearest unknown first.** Resolve consequential decisions before dependent work; create no plan files unless requested.
 - **Prefer references over pasted context.** Point Codex to an existing file, example, or URL when possible.
 - **Implement minimally.** Reuse project code, the standard library, native features, or installed dependencies before adding code.

@@ -10,6 +10,12 @@ For a new project or large ambiguous feature, add:
 
 > Use grill-with-docs when durable context helps, otherwise grill-me, to resolve consequential decisions first. Summarize our goal, constraints, non-goals, and success criteria, then continue once those decisions are settled.
 
+For small, clear, low-risk work, direct implementation by the lead is the default. Use this prompt when you want to make that route explicit:
+
+> Implement **[change]** directly using existing code where possible, then run the smallest relevant checks. Skip separate planning, agent handoffs, and independent review unless I request them or a concrete uncertainty or risk warrants extra work. Keep delegation opt-in. Assess risk from the affected behavior, not just the size of the edit.
+
+Our small-task pilot supports this default: direct implementation and implementation plus review passed the same checks, while the review route used more tokens. That result does not establish savings for larger or higher-risk work; compare total usage and quality before expanding orchestration.
+
 When you want discovery only, say so explicitly:
 
 > Inspect **[idea]**, clarify the consequential decisions, and propose an implementation plan. Do not edit code yet.
