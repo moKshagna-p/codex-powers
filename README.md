@@ -23,7 +23,7 @@ sequenceDiagram
     User->>Codex: Describe one outcome
     Codex->>Codex: Select only relevant skills and tools
     alt Large or ambiguous work
-        Codex->>Discovery: Grill, resolve decisions, then plan
+        Codex->>Discovery: Grill and resolve consequential decisions
         Discovery-->>User: Summarize alignment and ask only consequential questions
     else Bug or unexpected behavior
         Codex->>Discovery: Reproduce and prove root cause
@@ -44,8 +44,8 @@ sequenceDiagram
 - **One outcome per task.** Keep a concise checkpoint when context becomes noisy; continue the same outcome through compaction.
 - **Finish the requested outcome.** Continue through implementation and relevant verification; stop at discovery or review only when requested.
 - **Infer acceptance criteria.** Identify the requested outcome, constraints, permitted side effects, and proof of success; ask only about ambiguities that could materially change the result.
-- **Use the lightest workflow that fits.** Small changes start directly; risky or ambiguous work gets discovery and planning.
-- **Resolve the nearest unknown first.** Do not write detailed plans past unsettled decisions.
+- **Use the lightest workflow that fits.** Small changes start directly; risky or ambiguous work gets focused discovery. Planning is explicit opt-in.
+- **Resolve the nearest unknown first.** Resolve consequential decisions before dependent work; create no plan files unless requested.
 - **Prefer references over pasted context.** Point Codex to an existing file, example, or URL when possible.
 - **Implement minimally.** Reuse project code, the standard library, native features, or installed dependencies before adding code.
 - **Verify in proportion to risk.** Test behavior changes meaningfully; use parse, diff, link, or configuration checks for docs and config. Broaden suites only when integration or unresolved risk warrants it.
@@ -54,12 +54,27 @@ sequenceDiagram
 
 ## Request routing
 
-- **New project or large ambiguous feature:** Grill → resolve consequential decisions → plan when needed → implementation.
+- **New project or large ambiguous feature:** Grill → resolve consequential decisions → implementation and verification.
 - **Bug or failing test:** reproduce → root cause → smallest fix → regression check.
 - **UI build or redesign:** inspect existing patterns → `frontend-design` → visual and accessibility checks.
 - **UI or accessibility review:** `web-design-guidelines`.
 - **Small clear change:** direct implementation using the Ponytail decision ladder.
 - **Completion or integration:** fresh verification → user-approved Git action.
+
+## Efficient model routing
+
+| Work | Model and reasoning |
+| --- | --- |
+| Lead and default implementation | Astra Low (Light) |
+| Simple searches and extraction | Luna Low |
+| Code mapping, comparisons, bounded synthesis | Luna Medium |
+| Difficult bounded research or conflicting evidence | Luna High, selectively |
+| Clearly routine bounded implementation | Terra Low or Medium, optionally |
+| Independent substantive review | Sol High, when useful |
+
+Delegation stays opt-in: zero agents for trivial work, usually one or two, at most three concurrent children. Keep parallel exploration read-only, assign one writer per file, and let the lead integrate and verify. Children do not delegate. The lead can implement directly without a duplicate implementation agent.
+
+Higher reasoning can consume more usage. This routing is an efficiency baseline, not a guarantee of equal quality or a fixed saving. See the [copy-ready setup and delegation prompt](docs/WORKFLOW.md#7-authorize-delegation-when-useful).
 
 ## Skills
 
@@ -69,7 +84,8 @@ Invoke only the skills relevant to the current request. User and project instruc
 - `domain-modeling`: establish shared terminology and durable domain decisions.
 - `ponytail`: choose the smallest correct implementation using existing code, the standard library, or native features first.
 - `superpowers:systematic-debugging`: reproduce failures and prove the root cause before fixing them.
-- `superpowers:brainstorming` and `superpowers:writing-plans`: use only when unresolved design decisions or implementation risk justify them; keep artifacts local unless tracked documentation is requested.
+- `superpowers:brainstorming`: resolve consequential design uncertainty without adding an approval gate.
+- `superpowers:writing-plans`: use only when explicitly requested; keep artifacts local unless tracked documentation is requested.
 - `frontend-design` and `web-design-guidelines`: build distinctive UI and review usability, accessibility, responsiveness, and visual hierarchy.
 - `superpowers:test-driven-development`: use when a behavioral change benefits from red-green evidence, not as ceremony for documentation or configuration edits.
 - `superpowers:verification-before-completion`: gather fresh, risk-proportional evidence before declaring completion.
@@ -120,7 +136,7 @@ Useful Grill skills from [`mattpocock/skills`](https://github.com/mattpocock/ski
 
 ## Example requests
 
-- **Large feature:** “Clarify consequential decisions using grill-with-docs, plan when needed, then implement and verify this feature. Ask only about decisions that materially change the result.”
+- **Large feature:** “Clarify consequential decisions using grill-with-docs, then implement and verify this feature. Ask only about decisions that materially change the result.”
 - **Conversation-only idea:** “Use grill-me to stress-test this idea without creating project files.”
 - **Bug:** “Reproduce this issue, prove the root cause, then implement and verify the smallest fix.”
 - **Small change:** “Implement this directly. Reuse existing code and run the smallest relevant verification.”
@@ -131,6 +147,7 @@ More copy-ready prompts are in [`docs/WORKFLOW.md`](docs/WORKFLOW.md).
 
 - [Theo Browne's AI coding workflow](https://www.youtube.com/watch?v=xJaMTo2YgO8): focused tasks, concrete references, and active steering.
 - [Matt Pocock's writing-for-agents guidance](https://github.com/mattpocock/skills/blob/main/docs/productivity/writing-for-agents.md): progressive disclosure and one source of truth.
+- [Firecrawl orchestration guide](https://www.firecrawl.dev/blog/codex-multi-agent-orchestration): bounded specialists, independent exploration, and focused consolidation; the linked configuration examples use current Codex fields.
 - [OpenAI model guidance](https://developers.openai.com/api/docs/guides/latest-model): lean prompts and relevant tools.
 
 ## License

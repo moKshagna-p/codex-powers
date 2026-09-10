@@ -4,7 +4,7 @@
 
 Use this as the default prompt:
 
-> Implement **[outcome]**. Start with **[reference path, example, or URL]**. Success means **[observable acceptance criteria]**. Inspect the existing implementation, resolve routine details, and continue through implementation and relevant verification. Ask only when the answer materially changes scope or correctness; continue independent work while waiting. Plan locally under `.codex/plans/` when the work is multi-step, risky, decision-heavy, or spans sessions. Report changes, verification, and remaining gaps. Follow the existing Git authorization rules.
+> Implement **[outcome]**. Start with **[reference path, example, or URL]**. Success means **[observable acceptance criteria]**. Inspect the existing implementation, resolve routine details, and continue through implementation and relevant verification. Ask only when the answer materially changes scope or correctness; continue independent work while waiting. Work from compact acceptance criteria; do not create plan files or require a planning phase unless I explicitly request one. Report changes, verification, and remaining gaps. Follow the existing Git authorization rules.
 
 For a new project or large ambiguous feature, add:
 
@@ -56,9 +56,38 @@ This task-creation prompt is specific to the Codex desktop app.
 
 ## 7. Authorize delegation when useful
 
-Subagents are opt-in. Add this to a task when independent work would help:
+Subagents are opt-in per task. The lead owns architecture, consequential decisions, integration, and final verification. Use no agents for trivial work, usually one or two for independent work, and at most three concurrent children. Run dependent work sequentially. Keep parallel exploration read-only, assign one writer per file, and have children report blockers instead of delegating.
 
-> You may use subagents for bounded independent research or review when useful. Keep implementation ownership clear and verify findings before integrating them.
+### Model and effort selection
+
+| Assignment | Model | Effort | Selection rule |
+| --- | --- | --- | --- |
+| Lead and default implementation | `gpt-6-astra` | `low` | Lead implements directly when delegation would duplicate work. |
+| Source gathering and extraction | `gpt-5.6-luna` | `low` | Stop once the claim is supported. |
+| Code mapping, comparisons, bounded synthesis | `gpt-5.6-luna` | `medium` | Focus on specified paths or questions. |
+| Conflicting evidence or difficult bounded research | `gpt-5.6-luna` | `high` | Use only for a concrete reasoning need. |
+| Clearly routine bounded implementation | `gpt-5.6-terra` | `low` or `medium` | Optional when the task is sufficiently clear. |
+| Independent substantive review | `gpt-5.6-sol` | `high` | Prioritize correctness, security, and regression risk. |
+
+Sol High review is useful for consequential changes, not a mandatory second pass for every edit. Astra Low and Sol High are not interchangeable quality levels: model and reasoning effort are separate choices. This is our chosen baseline, not a measured claim that either always outperforms the other. Choose the appropriate model upfront; escalate with failure evidence instead of retrying blindly or walking an automatic model ladder. Reserve higher efforts for exceptional difficulty.
+
+For the same model, raising reasoning effort does not itself change the per-token rate, but it can generate more reasoning tokens and consume more usage. Research at Luna High is therefore not automatically the same total cost as Luna Low. Subscription usage also depends on task size, context, tools, and caching. Compare completed-task usage, latency, retries, defects, and review findings against similar tasks before claiming savings or equivalent quality. See [OpenAI models and reasoning guidance](https://learn.chatgpt.com/docs/models) and [usage and pricing](https://learn.chatgpt.com/docs/pricing).
+
+### Portable Codex configuration
+
+The sanitized [config snippet](../examples/codex/config.toml) and [specialist presets](../examples/codex/agents/) reproduce this routing. These are reference files; cloning this repository does not activate them.
+
+Merge the snippet into `~/.codex/config.toml`, preserving unrelated settings and existing tables. Copy the four preset TOML files into `~/.codex/agents/`, merging any existing customizations. Use a new Codex session to pick up settings. The concurrency limit counts children, excluding the lead. Each preset disables further delegation. Read-only presets express intended permissions; the active host permission policy can override them.
+
+Preset model and effort settings take precedence over spawn overrides. For Luna Medium/High research, Terra implementation, or a tool without custom-role selection, use a generic subagent with an explicit model, effort, and equivalent scoped instructions. When full-history inheritance prevents model overrides, supply a focused handoff instead. The generic fallback defaults to Luna Medium; the web researcher preset specifically uses Luna Low. See [OpenAI subagent configuration](https://learn.chatgpt.com/docs/agent-configuration/subagents).
+
+Keep generic operating policy in `~/.codex/AGENTS.md`. Model defaults do not themselves authorize delegation. Personal compaction thresholds, credentials, project paths, and plugin settings are intentionally absent from the portable snippet.
+
+### Copy-ready delegation prompt
+
+> Complete **[outcome]** with **[acceptance criteria]**, starting from **[paths or sources]**. You may delegate bounded independent work using the model routing in this workflow. Use zero agents for trivial work, usually one or two, at most three concurrent children; no nested delegation. Assign each specialist an objective, relevant references, acceptance criteria, and explicit edit ownership. Keep parallel exploration read-only and use one writer per file. Keep dependent work sequential. Return concise findings with source or file references, verification evidence, and unresolved questions. Reuse existing findings and agent context; broaden research only for a concrete gap. The lead integrates results and verifies consequential claims and changed behavior without repeating the entire investigation. Work from compact acceptance criteria without plan files or a mandatory planning phase. Continue through relevant verification and perform only authorized Git delivery.
+
+This adapts the [Firecrawl orchestration article](https://www.firecrawl.dev/blog/codex-multi-agent-orchestration)'s scoped specialists and focused consolidation. It does not require Firecrawl installation. Use the current configuration examples here rather than copying the article's older model names and concurrency fields.
 
 ## 8. Trial Headroom context compression
 
@@ -112,7 +141,7 @@ Our context experiment retains the existing 50,000-token compaction setting and 
 ## Daily cadence
 
 1. Describe one outcome with a concrete reference and observable success criteria.
-2. Resolve consequential decisions; plan only when warranted.
+2. Resolve consequential decisions; plan only when explicitly requested.
 3. Continue through implementation and proportional verification.
 4. Preserve decisions in a checkpoint when needed and keep working in the same task.
 5. Report the result and perform only authorized Git delivery.
