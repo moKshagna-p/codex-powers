@@ -12,6 +12,8 @@ For a new project or large ambiguous feature, add:
 
 For small, clear, low-risk work, direct implementation by the lead is the default. Use this prompt when you want to make that route explicit:
 
+Estimate scope from the prompt, then inspect the relevant code for affected behavior, dependencies, uncertainty, risk, and verification needs. Reassess as evidence changes; neither prompt length nor diff size reliably establishes task complexity.
+
 > Implement **[change]** directly using existing code where possible, then run the smallest relevant checks. Skip separate planning, agent handoffs, and independent review unless I request them or a concrete uncertainty or risk warrants extra work. Keep delegation opt-in. Assess risk from the affected behavior, not just the size of the edit.
 
 Our small-task pilot supports this default: direct implementation and implementation plus review passed the same checks, while the review route used more tokens. That result does not establish savings for larger or higher-risk work; compare total usage and quality before expanding orchestration.

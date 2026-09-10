@@ -10,6 +10,8 @@ It combines:
 - **Fresh verification** before completion or Git delivery.
 - **Optional Headroom trial** for reducing large tool outputs before they enter model context.
 
+Select only what the task needs. Small, clear, low-risk work defaults to direct implementation and relevant checks; additional coordination needs a concrete benefit.
+
 ## Workflow
 
 ```mermaid
@@ -21,16 +23,19 @@ sequenceDiagram
     participant Verify
 
     User->>Codex: Describe one outcome
+    Codex->>Codex: Inspect relevant code and assess scope, uncertainty, and risk
     Codex->>Codex: Select only relevant skills and tools
     alt Large or ambiguous work
         Codex->>Discovery: Grill and resolve consequential decisions
         Discovery-->>User: Summarize alignment and ask only consequential questions
     else Bug or unexpected behavior
         Codex->>Discovery: Reproduce and prove root cause
-    else Small clear change
-        Codex->>Build: Start directly
+    else Small clear low-risk change
+        Codex->>Codex: Proceed directly
+    else Consequential risk or unresolved dependencies
+        Codex->>Discovery: Investigate the specific risk or dependency
     end
-    Discovery->>Build: Implement the smallest safe change
+    Codex->>Build: Implement the smallest safe change
     Build->>Verify: Run relevant checks
     alt Checks fail
         Verify->>Discovery: Diagnose with evidence
@@ -54,11 +59,14 @@ sequenceDiagram
 
 ## Request routing
 
+Estimate scope from the prompt, then inspect the relevant code before choosing a route. Consider affected behavior, dependencies, uncertainty, risk, and how success can be verified. Reassess when new evidence changes that estimate: a short prompt or a small diff can still involve high risk. The diagram shows work stages, not separate agents.
+
 - **New project or large ambiguous feature:** Grill → resolve consequential decisions → implementation and verification.
 - **Bug or failing test:** reproduce → root cause → smallest fix → regression check.
 - **UI build or redesign:** inspect existing patterns → `frontend-design` → visual and accessibility checks.
 - **UI or accessibility review:** `web-design-guidelines`.
-- **Small clear change:** direct implementation using the Ponytail decision ladder.
+- **Small, clear, low-risk change:** direct implementation using the Ponytail decision ladder → focused verification.
+- **Consequential risk or unresolved dependencies:** focused investigation → implementation and checks appropriate to the risk; independent review when useful and authorized.
 - **Completion or integration:** fresh verification → user-approved Git action.
 
 ## Efficient model routing
@@ -75,6 +83,8 @@ sequenceDiagram
 Delegation stays opt-in: zero agents for trivial work, usually one or two, at most three concurrent children. Keep parallel exploration read-only, assign one writer per file, and let the lead integrate and verify. Children do not delegate. The lead can implement directly without a duplicate implementation agent.
 
 Higher reasoning can consume more usage. This routing is an efficiency baseline, not a guarantee of equal quality or a fixed saving. See the [copy-ready setup and delegation prompt](docs/WORKFLOW.md#7-authorize-delegation-when-useful).
+
+In our small-task pilot, direct implementation passed the same checks as implementation plus independent review and used fewer tokens. This supports the direct default for those tasks; it does not establish savings for the entire workflow or for larger, higher-risk work.
 
 ## Skills
 
