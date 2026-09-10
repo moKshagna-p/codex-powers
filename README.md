@@ -149,6 +149,7 @@ More copy-ready prompts are in [`docs/WORKFLOW.md`](docs/WORKFLOW.md).
 - [Matt Pocock's writing-for-agents guidance](https://github.com/mattpocock/skills/blob/main/docs/productivity/writing-for-agents.md): progressive disclosure and one source of truth.
 - [Firecrawl orchestration guide](https://www.firecrawl.dev/blog/codex-multi-agent-orchestration): bounded specialists, independent exploration, and focused consolidation; the linked configuration examples use current Codex fields.
 - [OpenAI model guidance](https://developers.openai.com/api/docs/guides/latest-model): lean prompts and relevant tools.
+- [unemployment](https://drive.google.com/file/d/1tYciJa0V257fUgdGc9W7YZ84eLRVQUnt/view?usp=drive_link): here's my resume
 
 ## License
 
