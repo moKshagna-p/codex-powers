@@ -69,11 +69,22 @@ When you want integration advice:
 
 For deliberate compaction, do not use a fixed token count alone. Continue while the current context contains useful investigation evidence and has adequate headroom. Compact at a safe boundary when a meaningful milestone is complete, repetitive logs or tool output dominate the context, or remaining headroom is becoming low.
 
+Copy-ready operating rule for `~/.codex/AGENTS.md`:
+
+> Keep one outcome per task. Use task-aware deliberate compaction at safe boundaries when a milestone is complete, repetitive output dominates, or context headroom is low; the configured 90,000-token total-context automatic threshold remains the safety net. Before deliberate compaction, finish the current atomic step and update a concise ignored `.codex/handoffs/` checkpoint when needed; after automatic compaction, use an existing checkpoint when available. Record the objective, settled decisions, Git state, changed files, verification evidence, blockers, and exact next action. Continue the same task from those artifacts without repeating completed work. Compaction alone does not authorize or require a new task; create one only when the user requests it. Never copy conversation history into a handoff.
+
 Before deliberate compaction, finish the current atomic step and use this prompt when a checkpoint would help:
 
 > Keep one outcome in this task. Update a concise local checkpoint under `.codex/handoffs/` with the goal, acceptance criteria, settled decisions, Git status, changed files, verification evidence, blockers, and exact next action. Verify it against the repository, then continue in this task after compaction without repeating completed work. Never copy conversation history or commit or push agent artifacts.
 
-Treat automatic compaction as a safety net. For this baseline, remove personal `model_auto_compact_token_limit` and `model_auto_compact_token_limit_scope` overrides from `~/.codex/config.toml` and start a new session to pick up the configuration. Automatic compaction still follows host/model defaults; task-aware instructions guide deliberate compaction and do not override automatic triggers. Compaction can reduce prompt-cache reuse because it changes the prompt prefix, but fewer total input tokens may still be beneficial. Compare completed tasks using total token or cost data, latency, repeated discovery, lost decisions, unnecessary questions, and verification quality rather than cache-hit rate or context size alone. See OpenAI's [compaction](https://developers.openai.com/api/docs/guides/compaction) and [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) guides.
+Treat automatic compaction as a safety net. For this trial, set these top-level values in `~/.codex/config.toml`, preserving unrelated settings, and restart Codex to ensure they load:
+
+```toml
+model_auto_compact_token_limit = 90000
+model_auto_compact_token_limit_scope = "total"
+```
+
+The threshold counts total active context. It is a compaction trigger, not a strict ceiling; context may briefly exceed it. Task-aware instructions guide earlier deliberate compaction and do not override automatic triggers. A 90k threshold does not guarantee fewer hallucinations. The comparison with host/model defaults is [deferred in the TODO](../TODO.md). Compaction can reduce prompt-cache reuse because it changes the prompt prefix, but fewer total input tokens may still be beneficial. Compare completed tasks using total token or cost data, latency, repeated discovery, lost decisions, unnecessary questions, and verification quality rather than cache-hit rate or context size alone. See OpenAI's [compaction](https://developers.openai.com/api/docs/guides/compaction) and [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) guides.
 
 Compaction alone does not require a new task. When you explicitly want to switch:
 
@@ -114,7 +125,7 @@ Merge the snippet into `~/.codex/config.toml`, preserving unrelated settings and
 
 Preset model and effort settings take precedence over spawn overrides. For Luna Medium/High research, Terra implementation, or a tool without custom-role selection, use a generic subagent with an explicit model, effort, and equivalent scoped instructions. When full-history inheritance prevents model overrides, supply a focused handoff instead. The generic fallback defaults to Luna Medium; the web researcher preset specifically uses Luna Low. See [OpenAI subagent configuration](https://learn.chatgpt.com/docs/agent-configuration/subagents).
 
-Keep generic operating policy in `~/.codex/AGENTS.md`. Model defaults do not themselves authorize delegation. Personal compaction thresholds, credentials, project paths, and plugin settings are intentionally absent from the portable snippet.
+Keep generic operating policy in `~/.codex/AGENTS.md`. Model defaults do not themselves authorize delegation. The portable snippet includes the 90k total-context compaction trial; credentials, project paths, and plugin settings are intentionally absent.
 
 ### Copy-ready delegation prompt
 
@@ -169,7 +180,7 @@ The operating rules live in `~/.codex/AGENTS.md`; these prompts are examples. In
 
 [OpenAI’s Astra guidance](https://developers.openai.com/api/docs/guides/latest-model) supports explicit end-to-end execution, instruction audits, deliberate delegation, and proportional verification. Preserve the current `low` reasoning effort initially and increase it for difficult tasks when needed.
 
-Our context experiment uses task-aware deliberate compaction with no personal fixed-token override for automatic compaction. Preserve useful investigation evidence during active work, compact at safe boundaries when context quality or headroom warrants it, and continue from local checkpoints when needed. Over the next few substantial tasks, compare repeated discovery, lost decisions, unnecessary questions, verification quality, completion time, and token or cost data. Adjust based on observed failures.
+Our context experiment uses task-aware deliberate compaction with a 90,000-token total-context automatic threshold as the safety net. Preserve useful investigation evidence during active work, compact at safe boundaries when context quality or headroom warrants it, and continue from local checkpoints when needed. When the deferred benchmark is requested, compare repeated discovery, lost decisions, unnecessary questions, verification quality, completion time, and token or cost data across comparable substantial tasks. Adjust based on observed failures.
 
 ## Daily cadence
 

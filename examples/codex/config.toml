@@ -1,6 +1,9 @@
 # Merge into ~/.codex/config.toml; preserve unrelated settings.
 model = "gpt-6-astra"
 model_reasoning_effort = "low"
+# Trial safety net; task-aware compaction may happen earlier.
+model_auto_compact_token_limit = 90000
+model_auto_compact_token_limit_scope = "total"
 
 [agents]
 enabled = true
