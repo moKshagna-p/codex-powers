@@ -31,7 +31,8 @@ sequenceDiagram
         Codex->>Codex: Resolve bounded implementation details
     else Investigative route
         Codex->>Discovery: Prove cause or resolve uncertainty
-    else High-risk route
+    end
+    opt High-risk signals in any route
         Codex->>Discovery: Identify invariants and failure modes
         Codex->>Codex: Select strongest suitable implementation path
     end
@@ -49,7 +50,7 @@ sequenceDiagram
 
 ## Core rules
 
-- **One outcome per task.** Keep a concise checkpoint when context becomes noisy; continue the same outcome through compaction.
+- **One outcome per task.** Compact at a safe boundary when a milestone is complete, low-value output dominates the context, or remaining headroom is becoming low. Keep a concise checkpoint when needed and continue the same outcome after compaction.
 - **Finish the requested outcome.** Continue through implementation and relevant verification; stop at discovery or review only when requested.
 - **Infer acceptance criteria.** Identify the requested outcome, constraints, permitted side effects, and proof of success; ask only about ambiguities that could materially change the result.
 - **Use the lightest workflow that fits.** Routine changes stay direct. Investigation begins only for a concrete unknown or failure, and independent review is reserved for consequential risk. Small changes can still be high-risk.
@@ -71,6 +72,8 @@ Estimate scope from the prompt, then inspect the relevant code before choosing a
 | **Standard** | Moderate repository reasoning or related multi-file change without high-risk signals | Capable lead implements end to end → affected checks |
 | **Investigative** | Bug, failure, unfamiliar path, dependency ambiguity, weak tests, or failed attempt | Prove cause or resolve uncertainty → smallest change → regression evidence |
 | **High-risk** | Auth, security, secrets, privacy, payments, destructive behavior, migrations, concurrency, public APIs, irreversible state, or cross-system blast radius | Strongest suitable implementation → deterministic checks → independent review; human approval for irreversible production actions |
+
+Routes can overlap: investigation resolves uncertainty, while risk determines the required assurance. An authentication bug needs root-cause investigation plus the high-risk implementation, verification, and review requirements. Resolving the cause does not remove those requirements; delegation remains opt-in.
 
 New projects and large ambiguous features first resolve consequential decisions. UI work still uses the relevant design or accessibility skill. Completion always requires fresh, proportional verification and only user-authorized Git delivery.
 
@@ -122,15 +125,15 @@ Plans, Superpowers specs, handoffs, and private context belong under `.codex/` a
 
 This repository also ignores the historical `docs/plans/` and `docs/superpowers/` locations.
 
-## Astra setup and context trial
+## Astra setup and task-aware compaction
 
 [OpenAI’s Astra guidance](https://developers.openai.com/api/docs/guides/latest-model) recommends auditing conflicting instructions, encouraging end-to-end execution, tuning delegation explicitly, and keeping verification proportional to the change.
 
 This setup keeps the existing `low` reasoning effort as a baseline. Increase it for difficult tasks when the results justify it. Subagents remain opt-in; authorize bounded independent research or review when useful.
 
-For the context trial, retain the existing 50,000-token compaction setting but continue the same task after compaction, using a concise local checkpoint when needed. The threshold is a personal setting, not an Astra requirement. Automatic compaction no longer triggers task creation.
+Do not compact solely because a fixed token count was reached. Continue while the current context contains useful investigation evidence and has adequate headroom. Compact at a safe boundary when a milestone is complete, repetitive logs or tool output dominate the context, or remaining headroom is becoming low. Before deliberate compaction, finish the current atomic step and update a concise local checkpoint when needed. Continue the same task afterward; start a new task only for a genuinely unrelated outcome.
 
-Compare the next few substantial tasks for repeated discovery, lost decisions, unnecessary questions, verification quality, and completion time before changing the threshold or adding more workflow rules.
+Treat automatic compaction as a safety net and any manual threshold as model- and workflow-specific. Compare substantial tasks for repeated discovery, lost decisions, unnecessary questions, verification quality, completion time, and token or cost data before changing the threshold or adding more workflow rules.
 
 ## Quick start
 

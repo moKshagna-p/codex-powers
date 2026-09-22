@@ -10,7 +10,7 @@ For a new project or large ambiguous feature, add:
 
 > Use grill-with-docs when durable context helps, otherwise grill-me, to resolve consequential decisions first. Summarize our goal, constraints, non-goals, and success criteria, then continue once those decisions are settled.
 
-Choose among four routes after inspecting the affected code:
+Assess the following routes after inspecting the affected code; their requirements can overlap:
 
 | Route | Trigger | Default action |
 | --- | --- | --- |
@@ -18,6 +18,8 @@ Choose among four routes after inspecting the affected code:
 | Standard | Moderate repository reasoning or related multi-file work without high-risk signals | Capable lead implements end to end |
 | Investigative | Bug, failed attempt, unfamiliar path, ambiguous dependency, or weak verification | Establish the cause or resolve the unknown first |
 | High-risk | Auth, security, secrets, privacy, payments, destructive behavior, migrations, concurrency, public APIs, irreversible state, or cross-system blast radius | Strongest suitable implementation, deterministic checks, and independent review |
+
+Investigation resolves uncertainty; risk determines the required assurance. Apply high-risk implementation, verification, and review requirements whenever high-risk signals are present, including during investigative work. For example, an authentication bug requires root-cause investigation followed by the smallest safe fix, deterministic checks, and independent review. Resolving the cause does not downgrade the risk. Delegation remains opt-in, and irreversible production actions still require human approval.
 
 Use this prompt when you want the routine route explicitly:
 
@@ -63,7 +65,13 @@ When you want integration advice:
 
 ## 6. Continue a long task
 
-> Keep one outcome in this task. At a long phase boundary or after compaction, finish the current atomic step and update a concise local checkpoint under `.codex/handoffs/` when needed. Record the goal, acceptance criteria, settled decisions, Git status, changed files, verification evidence, blockers, and exact next action. Continue in this task from that checkpoint without repeating completed work. Never copy conversation history or commit/push agent artifacts.
+Do not compact solely because a fixed token count was reached. Continue while the current context contains useful investigation evidence and has adequate headroom. Compact at a safe boundary when a meaningful milestone is complete, repetitive logs or tool output dominate the context, or remaining headroom is becoming low.
+
+Before deliberate compaction, finish the current atomic step and use this prompt when a checkpoint would help:
+
+> Keep one outcome in this task. Update a concise local checkpoint under `.codex/handoffs/` with the goal, acceptance criteria, settled decisions, Git status, changed files, verification evidence, blockers, and exact next action. Verify it against the repository, then continue in this task after compaction without repeating completed work. Never copy conversation history or commit or push agent artifacts.
+
+Treat automatic compaction as a safety net and any manual threshold as model- and workflow-specific. Compaction can reduce prompt-cache reuse because it changes the prompt prefix, but fewer total input tokens may still be beneficial. Compare completed tasks using total token or cost data, latency, repeated discovery, lost decisions, unnecessary questions, and verification quality rather than cache-hit rate or context size alone. See OpenAI's [compaction](https://developers.openai.com/api/docs/guides/compaction) and [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) guides.
 
 Compaction alone does not require a new task. When you explicitly want to switch:
 
@@ -159,7 +167,7 @@ The operating rules live in `~/.codex/AGENTS.md`; these prompts are examples. In
 
 [OpenAI’s Astra guidance](https://developers.openai.com/api/docs/guides/latest-model) supports explicit end-to-end execution, instruction audits, deliberate delegation, and proportional verification. Preserve the current `low` reasoning effort initially and increase it for difficult tasks when needed.
 
-Our context experiment retains the existing 50,000-token compaction setting and replaces automatic task rollover with continuation from local checkpoints. That threshold is a personal choice, not a model requirement. Over the next few substantial tasks, compare repeated discovery, lost decisions, unnecessary questions, verification quality, and completion time. Adjust based on observed failures.
+Our context experiment uses task-aware compaction instead of a fixed token cutoff. Preserve useful investigation evidence during active work, compact at safe boundaries when context quality or headroom warrants it, and continue from local checkpoints when needed. Over the next few substantial tasks, compare repeated discovery, lost decisions, unnecessary questions, verification quality, completion time, and token or cost data. Adjust based on observed failures.
 
 ## Daily cadence
 
