@@ -10,11 +10,20 @@ For a new project or large ambiguous feature, add:
 
 > Use grill-with-docs when durable context helps, otherwise grill-me, to resolve consequential decisions first. Summarize our goal, constraints, non-goals, and success criteria, then continue once those decisions are settled.
 
-For small, clear, low-risk work, direct implementation by the lead is the default. Use this prompt when you want to make that route explicit:
+Choose among four routes after inspecting the affected code:
+
+| Route | Trigger | Default action |
+| --- | --- | --- |
+| Routine | Localized, reversible, one subsystem, reliable checks, no sensitive domain | Implement directly and run focused checks |
+| Standard | Moderate repository reasoning or related multi-file work without high-risk signals | Capable lead implements end to end |
+| Investigative | Bug, failed attempt, unfamiliar path, ambiguous dependency, or weak verification | Establish the cause or resolve the unknown first |
+| High-risk | Auth, security, secrets, privacy, payments, destructive behavior, migrations, concurrency, public APIs, irreversible state, or cross-system blast radius | Strongest suitable implementation, deterministic checks, and independent review |
+
+Use this prompt when you want the routine route explicitly:
 
 Estimate scope from the prompt, then inspect the relevant code for affected behavior, dependencies, uncertainty, risk, and verification needs. Reassess as evidence changes; neither prompt length nor diff size reliably establishes task complexity.
 
-> Implement **[change]** directly using existing code where possible, then run the smallest relevant checks. Skip separate planning, agent handoffs, and independent review unless I request them or a concrete uncertainty or risk warrants extra work. Keep delegation opt-in. Assess risk from the affected behavior, not just the size of the edit.
+> Implement **[change]** directly using existing code where possible, then run the smallest checks that prove it. Escalate only if inspection reveals a high-risk signal, unresolved ambiguity, inadequate verification, or a failed attempt. Do not create a plan artifact or agent handoff merely because the task has several steps.
 
 Our small-task pilot supports this default: direct implementation and implementation plus review passed the same checks, while the review route used more tokens. That result does not establish savings for larger or higher-risk work; compare total usage and quality before expanding orchestration.
 
@@ -64,20 +73,26 @@ This task-creation prompt is specific to the Codex desktop app.
 
 ## 7. Authorize delegation when useful
 
-Subagents are opt-in per task. The lead owns architecture, consequential decisions, integration, and final verification. Use no agents for trivial work, usually one or two for independent work, and at most three concurrent children. Run dependent work sequentially. Keep parallel exploration read-only, assign one writer per file, and have children report blockers instead of delegating.
+Subagents are opt-in per task. The lead owns architecture, consequential decisions, integration, and final verification. Use no agents for trivial work, usually one or two for independent work, and at most three concurrent children. Run dependent work sequentially. Keep parallel exploration read-only, assign one writer per file, and have children report blockers instead of delegating. An independent model review is additional evidence, not proof of correctness.
 
 ### Model and effort selection
 
 | Assignment | Model | Effort | Selection rule |
 | --- | --- | --- | --- |
-| Lead and default implementation | `gpt-6-astra` | `low` | Lead implements directly when delegation would duplicate work. |
+| Routine implementation | `gpt-5.6-terra` | `low` or `medium` | Use when selected before execution or when it can own the bounded task end to end; do not create a wasteful handoff from Astra. |
+| Standard lead and implementation | `gpt-6-astra` | `low` | Lead implements directly when delegation would duplicate work. |
+| Difficult or high-risk implementation | `gpt-6-astra` | Increase only as justified | Use concrete uncertainty, risk, or failure evidence rather than task length alone. |
 | Source gathering and extraction | `gpt-5.6-luna` | `low` | Stop once the claim is supported. |
 | Code mapping, comparisons, bounded synthesis | `gpt-5.6-luna` | `medium` | Focus on specified paths or questions. |
 | Conflicting evidence or difficult bounded research | `gpt-5.6-luna` | `high` | Use only for a concrete reasoning need. |
-| Clearly routine bounded implementation | `gpt-5.6-terra` | `low` or `medium` | Optional when the task is sufficiently clear. |
-| Independent substantive review | `gpt-5.6-sol` | `high` | Prioritize correctness, security, and regression risk. |
+| Cost-effective independent review | `gpt-5.6-sol` | `high` | Use for consequential changes; prioritize correctness, security, and regression risk. |
+| Maximum-assurance review | Strongest suitable fresh model | Task-appropriate | Combine with deterministic analysis, realistic tests, domain review, and human approval where needed. |
 
-Sol High review is useful for consequential changes, not a mandatory second pass for every edit. Astra Low and Sol High are not interchangeable quality levels: model and reasoning effort are separate choices. This is our chosen baseline, not a measured claim that either always outperforms the other. Choose the appropriate model upfront; escalate with failure evidence instead of retrying blindly or walking an automatic model ladder. Reserve higher efforts for exceptional difficulty.
+Sol High review is a cost-effective independent pass for consequential changes, not a mandatory second pass for every edit and not a claim of best-possible review. Independence can reveal different mistakes, but it does not remove the reviewer's capability limits. For high-risk work, use the strongest suitable fresh reviewer available and require deterministic evidence such as tests, type checking, static analysis, migration rehearsal, or security tooling as applicable. Add domain or human review for consequences that models and automated checks cannot safely resolve.
+
+A reviewer receives the acceptance criteria, actual diff, relevant invariants, affected execution paths, and verification results. Ask it to challenge assumptions and report evidence-backed correctness, security, regression, edge-case, and test-coverage findings by severity. Keep the implementer and reviewer contexts independent enough to avoid merely repeating the same reasoning.
+
+Astra Low and Sol High are not interchangeable quality levels: model and reasoning effort are separate choices. This is our chosen efficiency baseline, not a measured claim that one always outperforms the other. Choose the appropriate route upfront; escalate with failure or risk evidence instead of retrying blindly or walking an automatic model ladder.
 
 For the same model, raising reasoning effort does not itself change the per-token rate, but it can generate more reasoning tokens and consume more usage. Research at Luna High is therefore not automatically the same total cost as Luna Low. Subscription usage also depends on task size, context, tools, and caching. Compare completed-task usage, latency, retries, defects, and review findings against similar tasks before claiming savings or equivalent quality. See [OpenAI models and reasoning guidance](https://learn.chatgpt.com/docs/models) and [usage and pricing](https://learn.chatgpt.com/docs/pricing).
 

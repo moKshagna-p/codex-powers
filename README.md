@@ -10,7 +10,7 @@ It combines:
 - **Fresh verification** before completion or Git delivery.
 - **Optional Headroom trial** for reducing large tool outputs before they enter model context.
 
-Select only what the task needs. Small, clear, low-risk work defaults to direct implementation and relevant checks; additional coordination needs a concrete benefit.
+Select only what the task needs. Route work using observable risk signals, keep routine work direct, and add investigation or independent review only when the affected behavior warrants it.
 
 ## Workflow
 
@@ -25,21 +25,24 @@ sequenceDiagram
     User->>Codex: Describe one outcome
     Codex->>Codex: Inspect relevant code and assess scope, uncertainty, and risk
     Codex->>Codex: Select only relevant skills and tools
-    alt Large or ambiguous work
-        Codex->>Discovery: Grill and resolve consequential decisions
-        Discovery-->>User: Summarize alignment and ask only consequential questions
-    else Bug or unexpected behavior
-        Codex->>Discovery: Reproduce and prove root cause
-    else Small clear low-risk change
-        Codex->>Codex: Proceed directly
-    else Consequential risk or unresolved dependencies
-        Codex->>Discovery: Investigate the specific risk or dependency
+    alt Routine route
+        Codex->>Build: Implement directly
+    else Standard route
+        Codex->>Codex: Resolve bounded implementation details
+    else Investigative route
+        Codex->>Discovery: Prove cause or resolve uncertainty
+    else High-risk route
+        Codex->>Discovery: Identify invariants and failure modes
+        Codex->>Codex: Select strongest suitable implementation path
     end
     Codex->>Build: Implement the smallest safe change
     Build->>Verify: Run relevant checks
     alt Checks fail
         Verify->>Discovery: Diagnose with evidence
     else Checks pass
+        opt High-risk or consequential change
+            Verify->>Verify: Independent review plus deterministic evidence
+        end
         Verify-->>User: Report results and requested Git delivery
     end
 ```
@@ -49,8 +52,9 @@ sequenceDiagram
 - **One outcome per task.** Keep a concise checkpoint when context becomes noisy; continue the same outcome through compaction.
 - **Finish the requested outcome.** Continue through implementation and relevant verification; stop at discovery or review only when requested.
 - **Infer acceptance criteria.** Identify the requested outcome, constraints, permitted side effects, and proof of success; ask only about ambiguities that could materially change the result.
-- **Use the lightest workflow that fits.** Small, clear, low-risk changes default to direct implementation by the lead and relevant checks. Separate planning, agent handoffs, and independent review need a concrete benefit or explicit request. Small changes can still carry high risk; planning and delegation remain opt-in.
+- **Use the lightest workflow that fits.** Routine changes stay direct. Investigation begins only for a concrete unknown or failure, and independent review is reserved for consequential risk. Small changes can still be high-risk.
 - **Resolve the nearest unknown first.** Resolve consequential decisions before dependent work; create no plan files unless requested.
+- **Sequence without ceremony.** Internally decompose dependent work whenever correctness requires it; a plan artifact is optional and user-requested.
 - **Prefer references over pasted context.** Point Codex to an existing file, example, or URL when possible.
 - **Implement minimally.** Reuse project code, the standard library, native features, or installed dependencies before adding code.
 - **Verify in proportion to risk.** Test behavior changes meaningfully; use parse, diff, link, or configuration checks for docs and config. Broaden suites only when integration or unresolved risk warrants it.
@@ -59,30 +63,33 @@ sequenceDiagram
 
 ## Request routing
 
-Estimate scope from the prompt, then inspect the relevant code before choosing a route. Consider affected behavior, dependencies, uncertainty, risk, and how success can be verified. Reassess when new evidence changes that estimate: a short prompt or a small diff can still involve high risk. The diagram shows work stages, not separate agents.
+Estimate scope from the prompt, then inspect the relevant code before choosing a route. Reassess when evidence changes the estimate. The diagram shows work stages, not separate agents.
 
-- **New project or large ambiguous feature:** Grill → resolve consequential decisions → implementation and verification.
-- **Bug or failing test:** reproduce → root cause → smallest fix → regression check.
-- **UI build or redesign:** inspect existing patterns → `frontend-design` → visual and accessibility checks.
-- **UI or accessibility review:** `web-design-guidelines`.
-- **Small, clear, low-risk change:** direct implementation using the Ponytail decision ladder → focused verification.
-- **Consequential risk or unresolved dependencies:** focused investigation → implementation and checks appropriate to the risk; independent review when useful and authorized.
-- **Completion or integration:** fresh verification → user-approved Git action.
+| Route | Observable signals | Execution |
+| --- | --- | --- |
+| **Routine** | Clear, localized, reversible, one subsystem, reliable checks, no sensitive domain | Direct implementation → focused verification |
+| **Standard** | Moderate repository reasoning or related multi-file change without high-risk signals | Capable lead implements end to end → affected checks |
+| **Investigative** | Bug, failure, unfamiliar path, dependency ambiguity, weak tests, or failed attempt | Prove cause or resolve uncertainty → smallest change → regression evidence |
+| **High-risk** | Auth, security, secrets, privacy, payments, destructive behavior, migrations, concurrency, public APIs, irreversible state, or cross-system blast radius | Strongest suitable implementation → deterministic checks → independent review; human approval for irreversible production actions |
+
+New projects and large ambiguous features first resolve consequential decisions. UI work still uses the relevant design or accessibility skill. Completion always requires fresh, proportional verification and only user-authorized Git delivery.
 
 ## Efficient model routing
 
 | Work | Model and reasoning |
 | --- | --- |
-| Lead and default implementation | Astra Low (Light) |
+| Routine bounded implementation | Terra Low or Medium when it can own the task end to end; otherwise the current lead directly |
+| Standard lead and implementation | Astra Low (Light) |
+| Difficult or high-risk implementation | Astra with increased reasoning when evidence justifies it |
 | Simple searches and extraction | Luna Low |
 | Code mapping, comparisons, bounded synthesis | Luna Medium |
 | Difficult bounded research or conflicting evidence | Luna High, selectively |
-| Clearly routine bounded implementation | Terra Low or Medium, optionally |
-| Independent substantive review | Sol High, when useful |
+| Cost-effective independent review | Sol High for consequential changes |
+| Maximum-assurance review | Strongest suitable fresh reviewer plus deterministic and domain checks |
 
 Delegation stays opt-in: zero agents for trivial work, usually one or two, at most three concurrent children. Keep parallel exploration read-only, assign one writer per file, and let the lead integrate and verify. Children do not delegate. The lead can implement directly without a duplicate implementation agent.
 
-Higher reasoning can consume more usage. This routing is an efficiency baseline, not a guarantee of equal quality or a fixed saving. See the [copy-ready setup and delegation prompt](docs/WORKFLOW.md#7-authorize-delegation-when-useful).
+Do not hand routine work from Astra to Terra merely to follow the table; the extra context transfer can cost more than it saves. Sol review adds an independent perspective but is not guaranteed to be the best possible review and never replaces tests, static analysis, or domain expertise. Higher reasoning can consume more usage. This routing is an efficiency baseline, not a guarantee of equal quality or a fixed saving. See the [copy-ready setup and delegation prompt](docs/WORKFLOW.md#7-authorize-delegation-when-useful).
 
 In our small-task pilot, direct implementation passed the same checks as implementation plus independent review and used fewer tokens. This supports the direct default for those tasks; it does not establish savings for the entire workflow or for larger, higher-risk work.
 
