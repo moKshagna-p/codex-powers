@@ -42,7 +42,7 @@ sequenceDiagram
         Verify->>Discovery: Diagnose with evidence
     else Checks pass
         opt High-risk or consequential change
-            Verify->>Verify: Independent review plus deterministic evidence
+            Verify->>Verify: Independent review or explicitly report review outstanding
         end
         Verify-->>User: Report results and requested Git delivery
     end
@@ -73,7 +73,7 @@ Estimate scope from the prompt, then inspect the relevant code before choosing a
 | **Investigative** | Bug, failure, unfamiliar path, dependency ambiguity, weak tests, or failed attempt | Prove cause or resolve uncertainty → smallest change → regression evidence |
 | **High-risk** | Auth, security, secrets, privacy, payments, destructive behavior, migrations, concurrency, public APIs, irreversible state, or cross-system blast radius | Strongest suitable implementation → deterministic checks → independent review; human approval for irreversible production actions |
 
-Routes can overlap: investigation resolves uncertainty, while risk determines the required assurance. An authentication bug needs root-cause investigation plus the high-risk implementation, verification, and review requirements. Resolving the cause does not remove those requirements; delegation remains opt-in.
+Routes can overlap: investigation resolves uncertainty, while risk determines the required assurance. An authentication bug needs root-cause investigation plus the high-risk implementation, verification, and review requirements. Resolving the cause does not remove those requirements; delegation remains opt-in. If independent review cannot proceed, finish authorized implementation and checks, report review as outstanding, and request delegation or human review. Self-review does not satisfy this requirement.
 
 New projects and large ambiguous features first resolve consequential decisions. UI work still uses the relevant design or accessibility skill. Completion always requires fresh, proportional verification and only user-authorized Git delivery.
 
@@ -131,9 +131,9 @@ This repository also ignores the historical `docs/plans/` and `docs/superpowers/
 
 This setup keeps the existing `low` reasoning effort as a baseline. Increase it for difficult tasks when the results justify it. Subagents remain opt-in; authorize bounded independent research or review when useful.
 
-Do not compact solely because a fixed token count was reached. Continue while the current context contains useful investigation evidence and has adequate headroom. Compact at a safe boundary when a milestone is complete, repetitive logs or tool output dominate the context, or remaining headroom is becoming low. Before deliberate compaction, finish the current atomic step and update a concise local checkpoint when needed. Continue the same task afterward; start a new task only for a genuinely unrelated outcome.
+For deliberate compaction, do not use a fixed token count alone. Continue while the current context contains useful investigation evidence and has adequate headroom. Compact at a safe boundary when a milestone is complete, repetitive logs or tool output dominate the context, or remaining headroom is becoming low. Before deliberate compaction, finish the current atomic step and update a concise local checkpoint when needed. Continue the same task afterward; start a new task only for a genuinely unrelated outcome.
 
-Treat automatic compaction as a safety net and any manual threshold as model- and workflow-specific. Compare substantial tasks for repeated discovery, lost decisions, unnecessary questions, verification quality, completion time, and token or cost data before changing the threshold or adding more workflow rules.
+Treat automatic compaction as a safety net. Leave personal `model_auto_compact_token_limit` and `model_auto_compact_token_limit_scope` overrides unset for this baseline; automatic compaction still follows the host/model defaults. Task-aware instructions guide deliberate compaction and do not override automatic triggers. Compare substantial tasks for repeated discovery, lost decisions, unnecessary questions, verification quality, completion time, and token or cost data before changing the threshold or adding more workflow rules.
 
 ## Quick start
 

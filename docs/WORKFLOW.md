@@ -21,6 +21,8 @@ Assess the following routes after inspecting the affected code; their requiremen
 
 Investigation resolves uncertainty; risk determines the required assurance. Apply high-risk implementation, verification, and review requirements whenever high-risk signals are present, including during investigative work. For example, an authentication bug requires root-cause investigation followed by the smallest safe fix, deterministic checks, and independent review. Resolving the cause does not downgrade the risk. Delegation remains opt-in, and irreversible production actions still require human approval.
 
+If independent review is required but delegation is not authorized or no reviewer is available, complete the authorized implementation and deterministic checks, then report independent review as outstanding. Request authorized delegation or human review before claiming the high-risk work is fully verified; self-review does not satisfy independent review.
+
 Use this prompt when you want the routine route explicitly:
 
 Estimate scope from the prompt, then inspect the relevant code for affected behavior, dependencies, uncertainty, risk, and verification needs. Reassess as evidence changes; neither prompt length nor diff size reliably establishes task complexity.
@@ -65,13 +67,13 @@ When you want integration advice:
 
 ## 6. Continue a long task
 
-Do not compact solely because a fixed token count was reached. Continue while the current context contains useful investigation evidence and has adequate headroom. Compact at a safe boundary when a meaningful milestone is complete, repetitive logs or tool output dominate the context, or remaining headroom is becoming low.
+For deliberate compaction, do not use a fixed token count alone. Continue while the current context contains useful investigation evidence and has adequate headroom. Compact at a safe boundary when a meaningful milestone is complete, repetitive logs or tool output dominate the context, or remaining headroom is becoming low.
 
 Before deliberate compaction, finish the current atomic step and use this prompt when a checkpoint would help:
 
 > Keep one outcome in this task. Update a concise local checkpoint under `.codex/handoffs/` with the goal, acceptance criteria, settled decisions, Git status, changed files, verification evidence, blockers, and exact next action. Verify it against the repository, then continue in this task after compaction without repeating completed work. Never copy conversation history or commit or push agent artifacts.
 
-Treat automatic compaction as a safety net and any manual threshold as model- and workflow-specific. Compaction can reduce prompt-cache reuse because it changes the prompt prefix, but fewer total input tokens may still be beneficial. Compare completed tasks using total token or cost data, latency, repeated discovery, lost decisions, unnecessary questions, and verification quality rather than cache-hit rate or context size alone. See OpenAI's [compaction](https://developers.openai.com/api/docs/guides/compaction) and [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) guides.
+Treat automatic compaction as a safety net. For this baseline, remove personal `model_auto_compact_token_limit` and `model_auto_compact_token_limit_scope` overrides from `~/.codex/config.toml` and start a new session to pick up the configuration. Automatic compaction still follows host/model defaults; task-aware instructions guide deliberate compaction and do not override automatic triggers. Compaction can reduce prompt-cache reuse because it changes the prompt prefix, but fewer total input tokens may still be beneficial. Compare completed tasks using total token or cost data, latency, repeated discovery, lost decisions, unnecessary questions, and verification quality rather than cache-hit rate or context size alone. See OpenAI's [compaction](https://developers.openai.com/api/docs/guides/compaction) and [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) guides.
 
 Compaction alone does not require a new task. When you explicitly want to switch:
 
@@ -167,7 +169,7 @@ The operating rules live in `~/.codex/AGENTS.md`; these prompts are examples. In
 
 [OpenAI’s Astra guidance](https://developers.openai.com/api/docs/guides/latest-model) supports explicit end-to-end execution, instruction audits, deliberate delegation, and proportional verification. Preserve the current `low` reasoning effort initially and increase it for difficult tasks when needed.
 
-Our context experiment uses task-aware compaction instead of a fixed token cutoff. Preserve useful investigation evidence during active work, compact at safe boundaries when context quality or headroom warrants it, and continue from local checkpoints when needed. Over the next few substantial tasks, compare repeated discovery, lost decisions, unnecessary questions, verification quality, completion time, and token or cost data. Adjust based on observed failures.
+Our context experiment uses task-aware deliberate compaction with no personal fixed-token override for automatic compaction. Preserve useful investigation evidence during active work, compact at safe boundaries when context quality or headroom warrants it, and continue from local checkpoints when needed. Over the next few substantial tasks, compare repeated discovery, lost decisions, unnecessary questions, verification quality, completion time, and token or cost data. Adjust based on observed failures.
 
 ## Daily cadence
 
