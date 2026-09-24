@@ -100,20 +100,20 @@ Subagents are opt-in per task. The lead owns architecture, consequential decisio
 
 | Assignment | Model | Effort | Selection rule |
 | --- | --- | --- | --- |
-| Routine implementation | `gpt-5.6-terra` | `low` or `medium` | Use when selected before execution or when it can own the bounded task end to end; do not create a wasteful handoff from Astra. |
-| Standard lead and implementation | `gpt-6-astra` | `low` | Lead implements directly when delegation would duplicate work. |
-| Difficult or high-risk implementation | `gpt-6-astra` | Increase only as justified | Use concrete uncertainty, risk, or failure evidence rather than task length alone. |
+| Routine implementation | `gpt-5.6-terra` | `low` or `medium` | Use when selected before execution or when it can own the bounded task end to end; do not create a wasteful handoff from Sol. |
+| Standard lead and implementation | `gpt-6-sol` | `high` | Lead implements directly when delegation would duplicate work. |
+| Difficult or high-risk implementation | `gpt-6-sol` | `high`; increase only as justified | Use concrete uncertainty, risk, or failure evidence rather than task length alone. |
 | Source gathering and extraction | `gpt-5.6-luna` | `low` | Stop once the claim is supported. |
 | Code mapping, comparisons, bounded synthesis | `gpt-5.6-luna` | `medium` | Focus on specified paths or questions. |
 | Conflicting evidence or difficult bounded research | `gpt-5.6-luna` | `high` | Use only for a concrete reasoning need. |
 | Cost-effective independent review | `gpt-5.6-sol` | `high` | Use for consequential changes; prioritize correctness, security, and regression risk. |
-| Maximum-assurance review | Strongest suitable fresh model | Task-appropriate | Combine with deterministic analysis, realistic tests, domain review, and human approval where needed. |
+| Maximum-assurance review | Strongest suitable fresh model, excluding Astra unless explicitly selected | Task-appropriate | Combine with deterministic analysis, realistic tests, domain review, and human approval where needed. |
 
 Sol High review is a cost-effective independent pass for consequential changes, not a mandatory second pass for every edit and not a claim of best-possible review. Independence can reveal different mistakes, but it does not remove the reviewer's capability limits. For high-risk work, use the strongest suitable fresh reviewer available and require deterministic evidence such as tests, type checking, static analysis, migration rehearsal, or security tooling as applicable. Add domain or human review for consequences that models and automated checks cannot safely resolve.
 
 A reviewer receives the acceptance criteria, actual diff, relevant invariants, affected execution paths, and verification results. Ask it to challenge assumptions and report evidence-backed correctness, security, regression, edge-case, and test-coverage findings by severity. Keep the implementer and reviewer contexts independent enough to avoid merely repeating the same reasoning.
 
-Astra Low and Sol High are not interchangeable quality levels: model and reasoning effort are separate choices. This is our chosen efficiency baseline, not a measured claim that one always outperforms the other. Choose the appropriate route upfront; escalate with failure or risk evidence instead of retrying blindly or walking an automatic model ladder.
+GPT-6 Sol High is the default lead and implementer route. Model and reasoning effort are separate choices; this baseline is not a measured claim of parity with another model. Astra is used only when the user explicitly selects it. Choose the appropriate route upfront; escalate with failure or risk evidence instead of retrying blindly or walking an automatic model ladder.
 
 For the same model, raising reasoning effort does not itself change the per-token rate, but it can generate more reasoning tokens and consume more usage. Research at Luna High is therefore not automatically the same total cost as Luna Low. Subscription usage also depends on task size, context, tools, and caching. Compare completed-task usage, latency, retries, defects, and review findings against similar tasks before claiming savings or equivalent quality. See [OpenAI models and reasoning guidance](https://learn.chatgpt.com/docs/models) and [usage and pricing](https://learn.chatgpt.com/docs/pricing).
 
@@ -174,11 +174,11 @@ Local validation with Headroom 0.37.0: installation succeeded, and a synthetic J
 
 Prioritize large test reports, repetitive logs, and structured search results for the first comparison. Keep failure learning in preview mode: the local preview could not complete because Codex CLI 0.147.0 was rejected for Astra, and its scan included sessions from other projects despite the project argument. Validate project scoping and update the CLI before using its recommendations. Do not apply generated workflow rules automatically.
 
-## Astra baseline and trial
+## GPT-6 Sol baseline and trial
 
 The operating rules live in `~/.codex/AGENTS.md`; these prompts are examples. Installed skill defaults must follow that policy, including its limits on mandatory approval steps and verification. Recheck conflicts after skill updates rather than editing cached plugin copies.
 
-[OpenAI’s Astra guidance](https://developers.openai.com/api/docs/guides/latest-model) supports explicit end-to-end execution, instruction audits, deliberate delegation, and proportional verification. Preserve the current `low` reasoning effort initially and increase it for difficult tasks when needed.
+[OpenAI’s GPT-6 model guidance](https://developers.openai.com/api/docs/guides/latest-model) supports explicit end-to-end execution, instruction audits, deliberate delegation, and proportional verification. Use GPT-6 Sol at `high` reasoning effort by default and increase it only when evidence justifies it. Astra requires explicit user selection.
 
 Our context experiment uses task-aware deliberate compaction with a 90,000-token total-context automatic threshold as the safety net. Preserve useful investigation evidence during active work, compact at safe boundaries when context quality or headroom warrants it, and continue from local checkpoints when needed. When the deferred benchmark is requested, compare repeated discovery, lost decisions, unnecessary questions, verification quality, completion time, and token or cost data across comparable substantial tasks. Adjust based on observed failures.
 
