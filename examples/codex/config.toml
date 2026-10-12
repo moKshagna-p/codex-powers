@@ -1,9 +1,7 @@
 # Merge into ~/.codex/config.toml; preserve unrelated settings.
 model = "gpt-6-sol"
 model_reasoning_effort = "high"
-# Trial safety net; task-aware compaction may happen earlier.
-model_auto_compact_token_limit = 90000
-model_auto_compact_token_limit_scope = "total"
+# Automatic compaction uses model defaults; task-aware compaction may happen earlier.
 
 [agents]
 enabled = true

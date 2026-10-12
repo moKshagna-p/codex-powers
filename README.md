@@ -59,6 +59,7 @@ sequenceDiagram
 - **Prefer references over pasted context.** Point Codex to an existing file, example, or URL when possible.
 - **Implement minimally.** Reuse project code, the standard library, native features, or installed dependencies before adding code.
 - **Verify in proportion to risk.** Test behavior changes meaningfully; use parse, diff, link, or configuration checks for docs and config. Broaden suites only when integration or unresolved risk warrants it.
+- **Choose browser tooling explicitly.** When Agent Browser is installed, ask Codex to use `agent-browser` for website automation; its MCP registration does not replace the desktop app's built-in `@Browser`. See the [browser workflow](docs/WORKFLOW.md#3-use-agent-browser-for-website-tasks).
 - **Keep Git user-controlled.** Codex commits, pushes, merges, or opens a PR only when explicitly requested.
 - **Name branches by intent.** Use `<type>/<short-description>` with `fix`, `feat`, `ui`, `docs`, `refactor`, `test`, or `chore` based on the requested work.
 
@@ -92,7 +93,7 @@ New projects and large ambiguous features first resolve consequential decisions.
 
 Delegation stays opt-in: zero agents for trivial work, usually one or two, at most three concurrent children. Keep parallel exploration read-only, assign one writer per file, and let the lead integrate and verify. Children do not delegate. The lead can implement directly without a duplicate implementation agent.
 
-Do not hand routine work from Sol to Terra merely to follow the table; the extra context transfer can cost more than it saves. Sol review adds an independent perspective but is not guaranteed to be the best possible review and never replaces tests, static analysis, or domain expertise. Higher reasoning can consume more usage. This routing is an efficiency baseline, not a guarantee of equal quality or a fixed saving. See the [copy-ready setup and delegation prompt](docs/WORKFLOW.md#7-authorize-delegation-when-useful).
+Do not hand routine work from Sol to Terra merely to follow the table; the extra context transfer can cost more than it saves. Sol review adds an independent perspective but is not guaranteed to be the best possible review and never replaces tests, static analysis, or domain expertise. Higher reasoning can consume more usage. This routing is an efficiency baseline, not a guarantee of equal quality or a fixed saving. See the [copy-ready setup and delegation prompt](docs/WORKFLOW.md#8-authorize-delegation-when-useful).
 
 In our small-task pilot, direct implementation passed the same checks as implementation plus independent review and used fewer tokens. This supports the direct default for those tasks; it does not establish savings for the entire workflow or for larger, higher-risk work.
 
@@ -133,7 +134,7 @@ This setup uses `gpt-6-sol` at `high` reasoning effort by default. Select Astra 
 
 For deliberate compaction, do not use a fixed token count alone. Continue while the current context contains useful investigation evidence and has adequate headroom. Compact at a safe boundary when a milestone is complete, repetitive logs or tool output dominate the context, or remaining headroom is becoming low. Before deliberate compaction, finish the current atomic step and update a concise local checkpoint when needed. Continue the same task afterward; start a new task only for a genuinely unrelated outcome.
 
-Treat automatic compaction as a safety net. The current trial sets `model_auto_compact_token_limit = 90000` and `model_auto_compact_token_limit_scope = "total"` in the [Codex config example](examples/codex/config.toml). This counts total active context and is a trigger, not a strict ceiling. A 90k threshold is not a proven safeguard against hallucinations; the [benchmark is deferred](TODO.md). Task-aware instructions guide deliberate compaction and do not override automatic triggers. Compare substantial tasks for repeated discovery, lost decisions, unnecessary questions, verification quality, completion time, and token or cost data before changing the threshold or adding more workflow rules.
+Keep automatic compaction enabled with model defaults as a safety net, without a custom token threshold. The [Codex config example](examples/codex/config.toml) leaves the compaction overrides unset. Task-aware instructions guide earlier deliberate compaction and do not override automatic triggers. See the [OpenAI configuration reference](https://learn.chatgpt.com/docs/config-file/config-reference).
 
 ## Quick start
 
@@ -145,7 +146,7 @@ Treat automatic compaction as a safety net. The current trial sets `model_auto_c
 
 ### Optional context compression
 
-[Headroom](https://github.com/headroomlabs-ai/headroom) provides local compression and a Codex CLI wrapper. Trial it on tasks with large logs or repetitive tool results, keeping the current compaction and checkpoint workflow. Measure correctness, token usage, and completion time before adopting it routinely. See the [setup, trial prompt, and rollback](docs/WORKFLOW.md#8-trial-headroom-context-compression). This repository documents the integration; it does not enable it in the Codex desktop app.
+[Headroom](https://github.com/headroomlabs-ai/headroom) provides local compression and a Codex CLI wrapper. Trial it on tasks with large logs or repetitive tool results, keeping the current compaction and checkpoint workflow. Measure correctness, token usage, and completion time before adopting it routinely. See the [setup, trial prompt, and rollback](docs/WORKFLOW.md#9-trial-headroom-context-compression). This repository documents the integration; it does not enable it in the Codex desktop app.
 
 Useful Grill skills from [`mattpocock/skills`](https://github.com/mattpocock/skills):
 

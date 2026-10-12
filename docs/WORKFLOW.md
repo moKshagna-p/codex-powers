@@ -47,11 +47,30 @@ For a critique only:
 
 > Review **[screen/component]** and prioritize the five highest-impact issues. Do not implement changes yet.
 
-## 3. Fix a bug
+## 3. Use Agent Browser for website tasks
+
+Use this prompt when you want Codex to use the installed Vercel Agent Browser CLI for a website or local web app:
+
+> Use the installed `agent-browser` CLI to open **[URL]**, perform **[browser task]**, and verify **[observable result]**. Take a screenshot when visual evidence would help. Keep the browser work within the requested site and report what you observed.
+
+For manual use, the basic loop is:
+
+```sh
+agent-browser open https://example.com
+agent-browser snapshot -i
+agent-browser click @e3 # replace with a ref from the snapshot
+agent-browser snapshot -i
+agent-browser screenshot page.png
+agent-browser close
+```
+
+Refresh the snapshot after navigation or a page update because element refs can change. Add `--headed` to `open` when you want to see the window. In Codex, `agent-browser` can be registered as an MCP server, but that registration does not replace the desktop app's native `@Browser`; name the tool in your request when the choice matters. The CLI and the built-in browser may use separate sessions. This setup is optional and platform-specific; check availability with `agent-browser --version` and MCP registration with `codex mcp get agent-browser`.
+
+## 4. Fix a bug
 
 > Fix **[symptom]** using systematic-debugging. Reproduce it, inspect recent changes and relevant data flow, and establish the root cause with evidence. Then implement the smallest root-cause fix and add a meaningful regression test where practical. Run the focused affected checks. Broaden the suite only for integration requirements, new changes, failures, or unresolved risk. Continue from diagnosis through verification without waiting for a separate implementation prompt.
 
-## 4. Verify and deliver
+## 5. Verify and deliver
 
 Verification is part of implementation. Use this when checking existing work:
 
@@ -61,30 +80,25 @@ When you want integration advice:
 
 > Use finishing-a-development-branch to assess readiness and present the relevant integration options. Perform Git delivery actions only when I explicitly request them; do not ask again for actions already authorized.
 
-## 5. Write clearly
+## 6. Write clearly
 
 > Rewrite this for **[audience]** using professional-communication. Lead with the decision or request, explain why it matters in plain language, and finish with clear owners and next steps: **[draft]**
 
-## 6. Continue a long task
+## 7. Continue a long task
 
 For deliberate compaction, do not use a fixed token count alone. Continue while the current context contains useful investigation evidence and has adequate headroom. Compact at a safe boundary when a meaningful milestone is complete, repetitive logs or tool output dominate the context, or remaining headroom is becoming low.
 
 Copy-ready operating rule for `~/.codex/AGENTS.md`:
 
-> Keep one outcome per task. Use task-aware deliberate compaction at safe boundaries when a milestone is complete, repetitive output dominates, or context headroom is low; the configured 90,000-token total-context automatic threshold remains the safety net. Before deliberate compaction, finish the current atomic step and update a concise ignored `.codex/handoffs/` checkpoint when needed; after automatic compaction, use an existing checkpoint when available. Record the objective, settled decisions, Git state, changed files, verification evidence, blockers, and exact next action. Continue the same task from those artifacts without repeating completed work. Compaction alone does not authorize or require a new task; create one only when the user requests it. Never copy conversation history into a handoff.
+> Keep one outcome per task. Use task-aware deliberate compaction at safe boundaries when a milestone is complete, repetitive output dominates, or context headroom is low; keep automatic compaction enabled with model defaults as the safety net. Before deliberate compaction, finish the current atomic step and update a concise ignored `.codex/handoffs/` checkpoint when needed; after automatic compaction, use an existing checkpoint when available. Record the objective, settled decisions, Git state, changed files, verification evidence, blockers, and exact next action. Continue the same task from those artifacts without repeating completed work. Compaction alone does not authorize or require a new task; create one only when the user requests it. Never copy conversation history into a handoff.
 
 Before deliberate compaction, finish the current atomic step and use this prompt when a checkpoint would help:
 
 > Keep one outcome in this task. Update a concise local checkpoint under `.codex/handoffs/` with the goal, acceptance criteria, settled decisions, Git status, changed files, verification evidence, blockers, and exact next action. Verify it against the repository, then continue in this task after compaction without repeating completed work. Never copy conversation history or commit or push agent artifacts.
 
-Treat automatic compaction as a safety net. For this trial, set these top-level values in `~/.codex/config.toml`, preserving unrelated settings, and restart Codex to ensure they load:
+Keep automatic compaction enabled with model defaults as a safety net. Remove the top-level `model_auto_compact_token_limit` and `model_auto_compact_token_limit_scope` overrides from `~/.codex/config.toml`, preserving unrelated settings. Restart Codex to ensure the configuration reloads. Leaving the token limit unset uses model defaults; see the [OpenAI configuration reference](https://learn.chatgpt.com/docs/config-file/config-reference).
 
-```toml
-model_auto_compact_token_limit = 90000
-model_auto_compact_token_limit_scope = "total"
-```
-
-The threshold counts total active context. It is a compaction trigger, not a strict ceiling; context may briefly exceed it. Task-aware instructions guide earlier deliberate compaction and do not override automatic triggers. A 90k threshold does not guarantee fewer hallucinations. The comparison with host/model defaults is [deferred in the TODO](../TODO.md). Compaction can reduce prompt-cache reuse because it changes the prompt prefix, but fewer total input tokens may still be beneficial. Compare completed tasks using total token or cost data, latency, repeated discovery, lost decisions, unnecessary questions, and verification quality rather than cache-hit rate or context size alone. See OpenAI's [compaction](https://developers.openai.com/api/docs/guides/compaction) and [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) guides.
+Task-aware instructions guide earlier deliberate compaction and do not override automatic triggers. Compaction can reduce prompt-cache reuse because it changes the prompt prefix, but fewer total input tokens may still be beneficial. Compare completed tasks using total token or cost data, latency, repeated discovery, lost decisions, unnecessary questions, and verification quality rather than cache-hit rate or context size alone. See OpenAI's [compaction](https://developers.openai.com/api/docs/guides/compaction) and [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) guides.
 
 Compaction alone does not require a new task. When you explicitly want to switch:
 
@@ -92,7 +106,7 @@ Compaction alone does not require a new task. When you explicitly want to switch
 
 This task-creation prompt is specific to the Codex desktop app.
 
-## 7. Authorize delegation when useful
+## 8. Authorize delegation when useful
 
 Subagents are opt-in per task. The lead owns architecture, consequential decisions, integration, and final verification. Use no agents for trivial work, usually one or two for independent work, and at most three concurrent children. Run dependent work sequentially. Keep parallel exploration read-only, assign one writer per file, and have children report blockers instead of delegating. An independent model review is additional evidence, not proof of correctness.
 
@@ -125,7 +139,7 @@ Merge the snippet into `~/.codex/config.toml`, preserving unrelated settings and
 
 Preset model and effort settings take precedence over spawn overrides. For Luna Medium/High research, Terra implementation, or a tool without custom-role selection, use a generic subagent with an explicit model, effort, and equivalent scoped instructions. When full-history inheritance prevents model overrides, supply a focused handoff instead. The generic fallback defaults to Luna Medium; the web researcher preset specifically uses Luna Low. See [OpenAI subagent configuration](https://learn.chatgpt.com/docs/agent-configuration/subagents).
 
-Keep generic operating policy in `~/.codex/AGENTS.md`. Model defaults do not themselves authorize delegation. The portable snippet includes the 90k total-context compaction trial; credentials, project paths, and plugin settings are intentionally absent.
+Keep generic operating policy in `~/.codex/AGENTS.md`. Model defaults do not themselves authorize delegation. The portable snippet leaves automatic compaction at model defaults; credentials, project paths, and plugin settings are intentionally absent.
 
 ### Copy-ready delegation prompt
 
@@ -133,9 +147,9 @@ Keep generic operating policy in `~/.codex/AGENTS.md`. Model defaults do not the
 
 This adapts the [Firecrawl orchestration article](https://www.firecrawl.dev/blog/codex-multi-agent-orchestration)'s scoped specialists and focused consolidation. It does not require Firecrawl installation. Use the current configuration examples here rather than copying the article's older model names and concurrency fields.
 
-## 8. Trial Headroom context compression
+## 9. Trial Headroom context compression
 
-Use this optional trial when large tool results dominate context. Start with a representative task and a comparable unwrapped baseline. Keep the model, reasoning effort, acceptance criteria, and compaction threshold fixed so the comparison is useful.
+Use this optional trial when large tool results dominate context. Start with a representative task and a comparable unwrapped baseline. Keep the model, reasoning effort, acceptance criteria, and compaction configuration fixed so the comparison is useful.
 
 The [upstream Headroom README](https://github.com/headroomlabs-ai/headroom#get-started-60-seconds) documents installation and agent wrapping. The following is a **Codex CLI** example, requiring `uv` and an already working `codex` command:
 
@@ -180,7 +194,7 @@ The operating rules live in `~/.codex/AGENTS.md`; these prompts are examples. In
 
 [OpenAI’s GPT-6 model guidance](https://developers.openai.com/api/docs/guides/latest-model) supports explicit end-to-end execution, instruction audits, deliberate delegation, and proportional verification. Use GPT-6 Sol at `high` reasoning effort by default and increase it only when evidence justifies it. Astra requires explicit user selection.
 
-Our context experiment uses task-aware deliberate compaction with a 90,000-token total-context automatic threshold as the safety net. Preserve useful investigation evidence during active work, compact at safe boundaries when context quality or headroom warrants it, and continue from local checkpoints when needed. When the deferred benchmark is requested, compare repeated discovery, lost decisions, unnecessary questions, verification quality, completion time, and token or cost data across comparable substantial tasks. Adjust based on observed failures.
+Our context workflow uses task-aware deliberate compaction with model-default automatic compaction as the safety net, without a custom token threshold. Preserve useful investigation evidence during active work, compact at safe boundaries when context quality or headroom warrants it, and continue from local checkpoints when needed. When the deferred benchmark is requested, compare repeated discovery, lost decisions, unnecessary questions, verification quality, completion time, and token or cost data across comparable substantial tasks. Adjust based on observed failures.
 
 ## Daily cadence
 
