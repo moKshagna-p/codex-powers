@@ -58,6 +58,7 @@ sequenceDiagram
 - **Sequence without ceremony.** Internally decompose dependent work whenever correctness requires it; a plan artifact is optional and user-requested.
 - **Prefer references over pasted context.** Point Codex to an existing file, example, or URL when possible.
 - **Implement minimally.** Reuse project code, the standard library, native features, or installed dependencies before adding code.
+- **Use pnpm or bun only.** For JavaScript/TypeScript package management and scripts, never run `npm` or `npx`; use `pnpm dlx` or `bunx` for one-off tools.
 - **Verify in proportion to risk.** Test behavior changes meaningfully; use parse, diff, link, or configuration checks for docs and config. Broaden suites only when integration or unresolved risk warrants it.
 - **Choose browser tooling explicitly.** When Agent Browser is installed, ask Codex to use `agent-browser` for website automation; its MCP registration does not replace the desktop app's built-in `@Browser`. See the [browser workflow](docs/WORKFLOW.md#3-use-agent-browser-for-website-tasks).
 - **Keep Git user-controlled.** Codex commits, pushes, merges, or opens a PR only when explicitly requested.

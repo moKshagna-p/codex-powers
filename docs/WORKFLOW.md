@@ -6,6 +6,10 @@ Use this as the default prompt:
 
 > Implement **[outcome]**. Start with **[reference path, example, or URL]**. Success means **[observable acceptance criteria]**. Inspect the existing implementation, resolve routine details, and continue through implementation and relevant verification. Ask only when the answer materially changes scope or correctness; continue independent work while waiting. Work from compact acceptance criteria; do not create plan files or require a planning phase unless I explicitly request one. Report changes, verification, and remaining gaps. Follow the existing Git authorization rules.
 
+Copy-ready package-manager rule for `~/.codex/AGENTS.md`:
+
+> Use only `pnpm` or `bun` for JavaScript/TypeScript package management and scripts. Never run `npm` or `npx`; use `pnpm dlx` or `bunx` for one-off tools.
+
 For a new project or large ambiguous feature, add:
 
 > Use grill-with-docs when durable context helps, otherwise grill-me, to resolve consequential decisions first. Summarize our goal, constraints, non-goals, and success criteria, then continue once those decisions are settled.
