@@ -1,5 +1,5 @@
 # Merge into ~/.codex/config.toml; preserve unrelated settings.
-model = "gpt-6-sol"
+model = "gpt-6.1-sol"
 model_reasoning_effort = "high"
 # Automatic compaction uses model defaults; task-aware compaction may happen earlier.
 
@@ -7,5 +7,5 @@ model_reasoning_effort = "high"
 enabled = true
 max_concurrent_threads_per_session = 3
 # Generic fallback; named presets override these defaults.
-default_subagent_model = "gpt-5.6-luna"
-default_subagent_reasoning_effort = "medium"
+default_subagent_model = "gpt-6-luna"
+default_subagent_reasoning_effort = "high"

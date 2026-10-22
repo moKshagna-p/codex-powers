@@ -83,18 +83,18 @@ New projects and large ambiguous features first resolve consequential decisions.
 
 | Work | Model and reasoning |
 | --- | --- |
-| Routine bounded implementation | Terra Low or Medium when it can own the task end to end; otherwise the current lead directly |
-| Standard lead and implementation | GPT-6 Sol High |
-| Difficult or high-risk implementation | GPT-6 Sol High; increase effort only when evidence justifies it |
-| Simple searches and extraction | Luna Low |
-| Code mapping, comparisons, bounded synthesis | Luna Medium |
-| Difficult bounded research or conflicting evidence | Luna High, selectively |
-| Cost-effective independent review | Sol High for consequential changes |
-| Maximum-assurance review | Strongest suitable fresh reviewer, excluding Astra unless explicitly selected, plus deterministic and domain checks |
+| Routine bounded implementation | GPT-6.1 Sol High |
+| Standard lead and implementation | GPT-6.1 Sol High |
+| Difficult or high-risk implementation | GPT-6.1 Sol High |
+| Simple searches and extraction | GPT-6 Luna High |
+| Code mapping, comparisons, bounded synthesis | GPT-6 Luna High |
+| Difficult bounded research or conflicting evidence | GPT-6 Luna High |
+| Cost-effective independent review | GPT-6.1 Sol High for consequential changes |
+| Maximum-assurance review | Fresh GPT-6.1 Sol High reviewer, plus deterministic and domain checks |
 
 Delegation stays opt-in: zero agents for trivial work, usually one or two, at most three concurrent children. Keep parallel exploration read-only, assign one writer per file, and let the lead integrate and verify. Children do not delegate. The lead can implement directly without a duplicate implementation agent.
 
-Do not hand routine work from Sol to Terra merely to follow the table; the extra context transfer can cost more than it saves. Sol review adds an independent perspective but is not guaranteed to be the best possible review and never replaces tests, static analysis, or domain expertise. Higher reasoning can consume more usage. This routing is an efficiency baseline, not a guarantee of equal quality or a fixed saving. See the [copy-ready setup and delegation prompt](docs/WORKFLOW.md#8-authorize-delegation-when-useful).
+Do not delegate routine work merely to follow the table; the extra context transfer can cost more than it saves. Sol review adds an independent perspective but is not guaranteed to be the best possible review and never replaces tests, static analysis, or domain expertise. High reasoning can consume more usage. This routing is an efficiency baseline, not a guarantee of equal quality or a fixed saving. See the [copy-ready setup and delegation prompt](docs/WORKFLOW.md#8-authorize-delegation-when-useful).
 
 In our small-task pilot, direct implementation passed the same checks as implementation plus independent review and used fewer tokens. This supports the direct default for those tasks; it does not establish savings for the entire workflow or for larger, higher-risk work.
 
@@ -127,11 +127,11 @@ Plans, Superpowers specs, handoffs, and private context belong under `.codex/` a
 
 This repository also ignores the historical `docs/plans/` and `docs/superpowers/` locations.
 
-## GPT-6 Sol setup and task-aware compaction
+## GPT-6.1 Sol setup and task-aware compaction
 
-[OpenAI’s GPT-6 model guidance](https://developers.openai.com/api/docs/guides/latest-model) recommends explicit end-to-end execution, deliberate delegation, and proportional verification.
+[OpenAI’s model guidance](https://developers.openai.com/api/docs/guides/latest-model) recommends explicit end-to-end execution, deliberate delegation, and proportional verification.
 
-This setup uses `gpt-6-sol` at `high` reasoning effort by default. Select Astra only when you explicitly choose it; increase Sol effort beyond `high` only when the results justify it. Subagents remain opt-in; authorize bounded independent research or review when useful.
+This setup uses `gpt-6.1-sol` at `high` reasoning effort by default, with `gpt-6-luna` at `high` for research and code mapping. Subagents remain opt-in; authorize bounded independent research or review when useful.
 
 For deliberate compaction, do not use a fixed token count alone. Continue while the current context contains useful investigation evidence and has adequate headroom. Compact at a safe boundary when a milestone is complete, repetitive logs or tool output dominate the context, or remaining headroom is becoming low. Before deliberate compaction, finish the current atomic step and update a concise local checkpoint when needed. Continue the same task afterward; start a new task only for a genuinely unrelated outcome.
 
