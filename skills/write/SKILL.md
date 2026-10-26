@@ -9,4 +9,4 @@ Identify the audience and the decision or request. Lead with that point, explain
 
 Preserve facts and intent. Replace jargon only when it helps the reader; keep technical detail needed for the decision. Ask about missing facts instead of inventing commitments, dates, or recipients.
 
-Apply [unslop](../unslop/SKILL.md) to remove filler, vague claims, and unnecessary dash punctuation while preserving required syntax. Return the finished draft. Drafting does not authorize sending or posting it.
+Apply [unslop](../unslop/SKILL.md) to remove filler, vague claims, and unnecessary dash punctuation from body prose. Preserve original title and proper name punctuation, along with required syntax. Return the finished draft. Drafting does not authorize sending or posting it.

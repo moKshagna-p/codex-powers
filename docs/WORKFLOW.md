@@ -90,7 +90,7 @@ Round one covers the scoped change. Later rounds cover meaningful changes and un
 
 ## 14. Unslop writing
 
-> Use $unslop to edit **[text or file]** for **[audience]**. Preserve the facts and meaning. Remove filler, vague claims, jargon, and unnecessary dash punctuation while preserving identifiers, commands, URLs, and code. Return a draft unless file edits are explicitly requested.
+> Use $unslop to edit **[text or file]** for **[audience]**. Preserve the facts and meaning. Remove filler, vague claims, jargon, and unnecessary dash punctuation from body prose. Preserve punctuation already present in original titles and names, along with identifiers, commands, URLs, and code. Return a draft unless file edits are explicitly requested.
 
 `write` already applies this method as part of rewriting professional messages. Neither skill sends or publishes the result.
 
