@@ -1,5 +1,5 @@
 ---
-name: checkpoint-task
+name: checkpoint
 description: Use when a long task needs a checkpoint before compaction or must resume from an existing checkpoint.
 ---
 

@@ -1,6 +1,6 @@
 ---
-name: trial-headroom
-description: Use when the user requests a Headroom context-compression trial for large or repetitive tool output.
+name: headroom
+description: Use when the user requests a Headroom context compression trial for large or repetitive tool output.
 ---
 
 # Trial Headroom compression

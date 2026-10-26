@@ -31,8 +31,8 @@ Use these sources before introducing a new value or pattern. Record missing deci
 
 ## Controls and feedback
 
-- Reuse shared controls and their supported variants. Keep reusable visual changes in the owning component; keep feature-specific treatment near that feature.
-- Distinguish hover, keyboard focus, selected, disabled, and pending states. Make icon-only actions understandable with accessible names and appropriate visible help.
+- Reuse shared controls and their supported variants. Keep reusable visual changes in the owning component; keep changes for individual features near their implementation.
+- Distinguish hover, keyboard focus, selected, disabled, and pending states. Make actions represented only by icons understandable with accessible names and appropriate visible help.
 - Show actual progress and completion. Explain why an unavailable action is unavailable when that would help the user proceed.
 - Make empty states explain how to start. Make errors explain what happened and how to recover; preserve entered work where practical.
 - Provide a visible way back, cancel, or undo when the action supports it. Reserve confirmation for consequential actions.
@@ -48,7 +48,7 @@ Use these sources before introducing a new value or pattern. Record missing deci
 - Preserve the main task on narrow screens. Reflow navigation and supporting panels deliberately; keep actions reachable without relying on hover.
 - Support keyboard navigation, visible focus, readable contrast, text zoom, and appropriate touch targets. Use more than color to communicate state.
 - Apply supported themes through semantic tokens. Check text, icons, borders, and overlays in each supported theme.
-- Use motion to explain a change or respond to an action. Respect reduced-motion preferences and avoid continuous decorative repainting.
+- Use motion to explain a change or respond to an action. Respect preferences for reduced motion and avoid continuous decorative repainting.
 
 ## Evidence before delivery
 

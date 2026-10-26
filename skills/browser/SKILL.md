@@ -1,5 +1,5 @@
 ---
-name: browser-task
+name: browser
 description: Use when the user requests website automation through the installed agent-browser CLI.
 ---
 
@@ -18,4 +18,4 @@ agent-browser close
 
 Refresh the snapshot after navigation or page updates because refs can change. Add `--headed` to `open` for a visible window. Stay within the requested site and authorized actions; report the observed result, with a screenshot when useful.
 
-The CLI and a host application's built-in browser can have separate sessions. Registering an MCP server does not replace a desktop browser. Do not infer permission to send messages, submit purchases, or mutate external data from permission to browse.
+The CLI and a browser built into the host application can have separate sessions. Registering an MCP server does not replace a desktop browser. Do not infer permission to send messages, submit purchases, or mutate external data from permission to browse.
