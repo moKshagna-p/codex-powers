@@ -1,209 +1,59 @@
-# Personal Codex Workflow
+# Workflow requests
+
+Install the [skill folders](../skills/) using the [README instructions](../README.md#install). These are copy-ready requests; reusable procedures and resources live inside each skill. Replace bracketed fields with your task's details.
 
 ## 1. Implement an outcome
 
-Use this as the default prompt:
+> Use $implement-outcome to implement **[outcome]**, starting from **[path, example, or URL]**. Success means **[observable criteria]**. Resolve routine details and continue through implementation and relevant verification. For a new project or large ambiguous feature, clarify consequential decisions first. Ask only when the answer materially changes scope or correctness. Do not create plan files or perform Git delivery unless requested.
 
-> Implement **[outcome]**. Start with **[reference path, example, or URL]**. Success means **[observable acceptance criteria]**. Inspect the existing implementation, resolve routine details, and continue through implementation and relevant verification. Ask only when the answer materially changes scope or correctness; continue independent work while waiting. Work from compact acceptance criteria; do not create plan files or require a planning phase unless I explicitly request one. Report changes, verification, and remaining gaps. Follow the existing Git authorization rules.
+For discovery only:
 
-Copy-ready package-manager rule for `~/.codex/AGENTS.md`:
-
-> Use only `pnpm` or `bun` for JavaScript/TypeScript package management and scripts. Never run `npm` or `npx`; use `pnpm dlx` or `bunx` for one-off tools.
-
-For a new project or large ambiguous feature, add:
-
-> Use grill-with-docs when durable context helps, otherwise grill-me, to resolve consequential decisions first. Summarize our goal, constraints, non-goals, and success criteria, then continue once those decisions are settled.
-
-Assess the following routes after inspecting the affected code; their requirements can overlap:
-
-| Route | Trigger | Default action |
-| --- | --- | --- |
-| Routine | Localized, reversible, one subsystem, reliable checks, no sensitive domain | Implement directly and run focused checks |
-| Standard | Moderate repository reasoning or related multi-file work without high-risk signals | Capable lead implements end to end |
-| Investigative | Bug, failed attempt, unfamiliar path, ambiguous dependency, or weak verification | Establish the cause or resolve the unknown first |
-| High-risk | Auth, security, secrets, privacy, payments, destructive behavior, migrations, concurrency, public APIs, irreversible state, or cross-system blast radius | Strongest suitable implementation, deterministic checks, and independent review |
-
-Investigation resolves uncertainty; risk determines the required assurance. Apply high-risk implementation, verification, and review requirements whenever high-risk signals are present, including during investigative work. For example, an authentication bug requires root-cause investigation followed by the smallest safe fix, deterministic checks, and independent review. Resolving the cause does not downgrade the risk. Delegation remains opt-in, and irreversible production actions still require human approval.
-
-If independent review is required but delegation is not authorized or no reviewer is available, complete the authorized implementation and deterministic checks, then report independent review as outstanding. Request authorized delegation or human review before claiming the high-risk work is fully verified; self-review does not satisfy independent review.
-
-Use this prompt when you want the routine route explicitly:
-
-Estimate scope from the prompt, then inspect the relevant code for affected behavior, dependencies, uncertainty, risk, and verification needs. Reassess as evidence changes; neither prompt length nor diff size reliably establishes task complexity.
-
-> Implement **[change]** directly using existing code where possible, then run the smallest checks that prove it. Escalate only if inspection reveals a high-risk signal, unresolved ambiguity, inadequate verification, or a failed attempt. Do not create a plan artifact or agent handoff merely because the task has several steps.
-
-Our small-task pilot supports this default: direct implementation and implementation plus review passed the same checks, while the review route used more tokens. That result does not establish savings for larger or higher-risk work; compare total usage and quality before expanding orchestration.
-
-When you want discovery only, say so explicitly:
-
-> Inspect **[idea]**, clarify the consequential decisions, and propose an implementation plan. Do not edit code yet.
+> Use $implement-outcome to inspect **[idea]**, clarify consequential decisions, and recommend an approach. Do not edit code yet.
 
 ## 2. Build or improve UI
 
-> Build **[screen/component]** using frontend-design. Match the existing design system, make it responsive and accessible, and explain the UX decisions briefly. Implement and run the relevant checks.
-
-For an existing screen:
-
-> Review **[screen/component]** using web-design-guidelines and fix the highest-impact usability, accessibility, visual-hierarchy, and responsive-design issues within **[scope]**. Verify the result. Ask before changes that materially alter the intended design or behavior.
+> Use $build-ui to build or improve **[screen/component]** within **[scope]**. Read **[existing DESIGN.md, components, tokens, or visual reference]**, preserve settled conventions, and check responsive behavior, accessibility, and relevant interaction states. Implement and verify the result; report unavailable visual checks.
 
 For a critique only:
 
-> Review **[screen/component]** and prioritize the five highest-impact issues. Do not implement changes yet.
+> Use $build-ui to review **[screen/component]** and prioritize the five highest-impact issues. Do not implement changes yet.
+
+To establish shared design documentation:
+
+> Use $build-ui to create or update a concise `DESIGN.md` from **[screens, components, tokens, or approved reference]**, adapting the skill's bundled design template. Describe the audience, primary task, visual intent, layout, copy, and interaction states. Link existing components and tokens as sources of truth. Preserve settled decisions and flag consequential conflicts. Do not redesign the UI or install tooling.
 
 ## 3. Use Agent Browser for website tasks
 
-Use this prompt when you want Codex to use the installed Vercel Agent Browser CLI for a website or local web app:
-
-> Use the installed `agent-browser` CLI to open **[URL]**, perform **[browser task]**, and verify **[observable result]**. Take a screenshot when visual evidence would help. Keep the browser work within the requested site and report what you observed.
-
-For manual use, the basic loop is:
-
-```sh
-agent-browser open https://example.com
-agent-browser snapshot -i
-agent-browser click @e3 # replace with a ref from the snapshot
-agent-browser snapshot -i
-agent-browser screenshot page.png
-agent-browser close
-```
-
-Refresh the snapshot after navigation or a page update because element refs can change. Add `--headed` to `open` when you want to see the window. In Codex, `agent-browser` can be registered as an MCP server, but that registration does not replace the desktop app's native `@Browser`; name the tool in your request when the choice matters. The CLI and the built-in browser may use separate sessions. This setup is optional and platform-specific; check availability with `agent-browser --version` and MCP registration with `codex mcp get agent-browser`.
+> Use $browser-task with the installed `agent-browser` CLI to open **[URL]**, perform **[browser task]**, and verify **[observable result]**. Stay within the requested site and authorized actions. Report observations and capture a screenshot when useful.
 
 ## 4. Fix a bug
 
-> Fix **[symptom]** using systematic-debugging. Reproduce it, inspect recent changes and relevant data flow, and establish the root cause with evidence. Then implement the smallest root-cause fix and add a meaningful regression test where practical. Run the focused affected checks. Broaden the suite only for integration requirements, new changes, failures, or unresolved risk. Continue from diagnosis through verification without waiting for a separate implementation prompt.
+> Use $fix-bug to fix **[symptom]**. Reproduce it, prove the root cause, then implement the smallest shared fix with regression evidence where practical. Continue through focused verification. Report the cause, change, checks, and remaining gaps.
 
 ## 5. Verify and deliver
 
-Verification is part of implementation. Use this when checking existing work:
+> Use $verify-work to check **[change]** against **[acceptance criteria]**. Run relevant checks and report actual results and remaining gaps. Perform only explicitly requested Git delivery.
 
-> Use verification-before-completion. Run the smallest set of checks that proves the acceptance criteria: meaningful tests for behavior, or parse, diff, link, and configuration checks for docs and config. Report the actual results and any remaining gap. Do not repeat passing checks without a concrete reason.
+When you want an independent review and minimal corrections:
 
-When you want integration advice:
-
-> Use finishing-a-development-branch to assess readiness and present the relevant integration options. Perform Git delivery actions only when I explicitly request them; do not ask again for actions already authorized.
+> Use $verify-work to get a read-only GPT-6.1 Sol High subagent review of **[diff or paths]** against **[acceptance criteria]**. This authorizes that reviewer. Request concrete defects and the smallest necessary fixes. Check each finding, apply only necessary corrections within scope, and rerun affected checks. Avoid speculative features or content expansion. Report if that model or independent review is unavailable.
 
 ## 6. Write clearly
 
-> Rewrite this for **[audience]** using professional-communication. Lead with the decision or request, explain why it matters in plain language, and finish with clear owners and next steps: **[draft]**
+> Use $write-clearly to rewrite **[draft]** for **[audience]**. Lead with the decision or request, explain why it matters, and include owners and next steps where relevant. Return a draft without sending it.
 
 ## 7. Continue a long task
 
-For deliberate compaction, do not use a fixed token count alone. Continue while the current context contains useful investigation evidence and has adequate headroom. Compact at a safe boundary when a meaningful milestone is complete, repetitive logs or tool output dominate the context, or remaining headroom is becoming low.
-
-Copy-ready operating rule for `~/.codex/AGENTS.md`:
-
-> Keep one outcome per task. Use task-aware deliberate compaction at safe boundaries when a milestone is complete, repetitive output dominates, or context headroom is low; keep automatic compaction enabled with model defaults as the safety net. Before deliberate compaction, finish the current atomic step and update a concise ignored `.codex/handoffs/` checkpoint when needed; after automatic compaction, use an existing checkpoint when available. Record the objective, settled decisions, Git state, changed files, verification evidence, blockers, and exact next action. Continue the same task from those artifacts without repeating completed work. Compaction alone does not authorize or require a new task; create one only when the user requests it. Never copy conversation history into a handoff.
-
-Before deliberate compaction, finish the current atomic step and use this prompt when a checkpoint would help:
-
-> Keep one outcome in this task. Update a concise local checkpoint under `.codex/handoffs/` with the goal, acceptance criteria, settled decisions, Git status, changed files, verification evidence, blockers, and exact next action. Verify it against the repository, then continue in this task after compaction without repeating completed work. Never copy conversation history or commit or push agent artifacts.
-
-Keep automatic compaction enabled with model defaults as a safety net. Remove the top-level `model_auto_compact_token_limit` and `model_auto_compact_token_limit_scope` overrides from `~/.codex/config.toml`, preserving unrelated settings. Restart Codex to ensure the configuration reloads. Leaving the token limit unset uses model defaults; see the [OpenAI configuration reference](https://learn.chatgpt.com/docs/config-file/config-reference).
-
-Task-aware instructions guide earlier deliberate compaction and do not override automatic triggers. Compaction can reduce prompt-cache reuse because it changes the prompt prefix, but fewer total input tokens may still be beneficial. Compare completed tasks using total token or cost data, latency, repeated discovery, lost decisions, unnecessary questions, and verification quality rather than cache-hit rate or context size alone. See OpenAI's [compaction](https://developers.openai.com/api/docs/guides/compaction) and [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) guides.
-
-Compaction alone does not require a new task. When you explicitly want to switch:
-
-> Update the checkpoint, then create one new task in this saved project using the local checkout. Ask it to continue from **[handoff path]**, project instructions, Git state, changed files, verification evidence, and the exact next action. Record the successor task ID in the checkpoint.
-
-This task-creation prompt is specific to the Codex desktop app.
+> Use $checkpoint-task to update a concise local checkpoint under `.codex/handoffs/` with the objective, settled decisions, Git state, changed files, verification evidence, blockers, and exact next action. Check it against the repository. After compaction, continue the same task without repeating completed work or copying conversation history.
 
 ## 8. Authorize delegation when useful
 
-Subagents are opt-in per task. The lead owns architecture, consequential decisions, integration, and final verification. Use no agents for trivial work, usually one or two for independent work, and at most three concurrent children. Run dependent work sequentially. Keep parallel exploration read-only, assign one writer per file, and have children report blockers instead of delegating. An independent model review is additional evidence, not proof of correctness.
+> Use $delegate-work to complete **[outcome]** with **[acceptance criteria]**, starting from **[paths or sources]**. You may delegate bounded independent work; use no agents for trivial work, usually one or two when useful, at most three concurrent children, and no nested delegation. Assign explicit ownership and preserve others' edits. Keep consequential decisions, integration, and final verification with the lead. Do not create plan files or perform Git delivery unless requested.
 
-### Model and effort selection
-
-| Assignment | Model | Effort | Selection rule |
-| --- | --- | --- | --- |
-| Routine implementation | `gpt-6.1-sol` | `high` | Implement directly when delegation would duplicate work. |
-| Standard lead and implementation | `gpt-6.1-sol` | `high` | Lead implements directly when delegation would duplicate work. |
-| Difficult or high-risk implementation | `gpt-6.1-sol` | `high` | Use concrete uncertainty, risk, or failure evidence rather than task length alone. |
-| Source gathering and extraction | `gpt-6-luna` | `high` | Stop once the claim is supported. |
-| Code mapping, comparisons, bounded synthesis | `gpt-6-luna` | `high` | Focus on specified paths or questions. |
-| Conflicting evidence or difficult bounded research | `gpt-6-luna` | `high` | Use only for a concrete reasoning need. |
-| Cost-effective independent review | `gpt-6.1-sol` | `high` | Use for consequential changes; prioritize correctness, security, and regression risk. |
-| Maximum-assurance review | `gpt-6.1-sol` | `high` | Use a fresh reviewer context. Combine with deterministic analysis, realistic tests, domain review, and human approval where needed. |
-
-GPT-6.1 Sol High review is an independent pass for consequential changes, not a mandatory second pass for every edit and not a claim of best-possible review. Independence can reveal different mistakes, but it does not remove the reviewer's capability limits. For high-risk work, use a fresh GPT-6.1 Sol High reviewer and require deterministic evidence such as tests, type checking, static analysis, migration rehearsal, or security tooling as applicable. Add domain or human review for consequences that models and automated checks cannot safely resolve.
-
-A reviewer receives the acceptance criteria, actual diff, relevant invariants, affected execution paths, and verification results. Ask it to challenge assumptions and report evidence-backed correctness, security, regression, edge-case, and test-coverage findings by severity. Keep the implementer and reviewer contexts independent enough to avoid merely repeating the same reasoning.
-
-GPT-6.1 Sol High is the default lead and implementer route; research and code mapping use GPT-6 Luna High. This baseline is not a measured claim of parity with another model. Choose the appropriate route upfront; escalate with failure or risk evidence instead of retrying blindly or walking an automatic model ladder.
-
-High reasoning effort can generate more reasoning tokens and consume more usage. Subscription usage also depends on task size, context, tools, and caching. Compare completed-task usage, latency, retries, defects, and review findings against similar tasks before claiming savings or equivalent quality. See [OpenAI models and reasoning guidance](https://learn.chatgpt.com/docs/models) and [usage and pricing](https://learn.chatgpt.com/docs/pricing).
-
-### Portable Codex configuration
-
-The sanitized [config snippet](../examples/codex/config.toml) and [specialist presets](../examples/codex/agents/) reproduce this routing. These are reference files; cloning this repository does not activate them.
-
-Merge the snippet into `~/.codex/config.toml`, preserving unrelated settings and existing tables. Copy the four preset TOML files into `~/.codex/agents/`, merging any existing customizations. Use a new Codex session to pick up settings. The concurrency limit counts children, excluding the lead. Each preset disables further delegation. Read-only presets express intended permissions; the active host permission policy can override them.
-
-Preset model and effort settings take precedence over spawn overrides. For a tool without custom-role selection, use a generic subagent with an explicit model, effort, and equivalent scoped instructions. When full-history inheritance prevents model overrides, supply a focused handoff instead. The generic fallback and research presets use GPT-6 Luna High; implementation and review presets use GPT-6.1 Sol High. See [OpenAI subagent configuration](https://learn.chatgpt.com/docs/agent-configuration/subagents).
-
-Keep generic operating policy in `~/.codex/AGENTS.md`. Model defaults do not themselves authorize delegation. The portable snippet leaves automatic compaction at model defaults; credentials, project paths, and plugin settings are intentionally absent.
-
-### Copy-ready delegation prompt
-
-> Complete **[outcome]** with **[acceptance criteria]**, starting from **[paths or sources]**. You may delegate bounded independent work using the model routing in this workflow. Use zero agents for trivial work, usually one or two, at most three concurrent children; no nested delegation. Assign each specialist an objective, relevant references, acceptance criteria, and explicit edit ownership. Keep parallel exploration read-only and use one writer per file. Keep dependent work sequential. Return concise findings with source or file references, verification evidence, and unresolved questions. Reuse existing findings and agent context; broaden research only for a concrete gap. The lead integrates results and verifies consequential claims and changed behavior without repeating the entire investigation. Work from compact acceptance criteria without plan files or a mandatory planning phase. Continue through relevant verification and perform only authorized Git delivery.
-
-This adapts the [Firecrawl orchestration article](https://www.firecrawl.dev/blog/codex-multi-agent-orchestration)'s scoped specialists and focused consolidation. It does not require Firecrawl installation. Use the current configuration examples here rather than copying the article's older model names and concurrency fields.
+The skill bundles [Codex configuration examples](../skills/delegate-work/assets/codex/). Request configuration changes separately when needed; preserve existing settings and customizations.
 
 ## 9. Trial Headroom context compression
 
-Use this optional trial when large tool results dominate context. Start with a representative task and a comparable unwrapped baseline. Keep the model, reasoning effort, acceptance criteria, and compaction configuration fixed so the comparison is useful.
+> Use $trial-headroom for **[representative task]**, comparing against **[unwrapped baseline]** with the same model, reasoning effort, acceptance criteria, and compaction settings. You may install Headroom and wrap the Codex CLI for this trial. Preserve exact source and verification evidence, retrieve originals when needed, and report correctness, total usage, elapsed time, retries, retrieval failures, and lost details. Inspect durable configuration changes and explain rollback. Do not enable automatic instruction learning or infer savings from advertised benchmarks.
 
-The [upstream Headroom README](https://github.com/headroomlabs-ai/headroom#get-started-60-seconds) documents installation and agent wrapping. The following is a **Codex CLI** example, requiring `uv` and an already working `codex` command:
-
-```sh
-uv tool install --python 3.13 "headroom-ai[proxy,code]"
-headroom wrap codex --code-memory none
-```
-
-Run the wrapper from the target project for each trial session. `--code-memory none` skips the default Serena installation. Wrapping starts a local proxy and configures the launched agent to use it; review any durable configuration changes. Keep shared memory, automatic instruction learning, and output shaping outside this initial compression trial.
-
-In another terminal while the session is running:
-
-```sh
-headroom doctor
-headroom perf
-headroom dashboard
-```
-
-Confirm actual traffic reaches the proxy. An installed package or successful health check alone does not prove the session is compressed. Desktop routing has not been validated here; the CLI example does not establish that an existing desktop conversation uses Headroom. Consult [OpenAI's provider configuration documentation](https://developers.openai.com/codex/config-advanced) before attempting a separate desktop setup.
-
-Copy-ready trial prompt:
-
-> Complete **[outcome]** using the existing workflow in this Headroom-wrapped session. Preserve exact source and test evidence; retrieve original content whenever compressed output leaves a consequential detail unclear. Keep checkpoints under `.codex/` when needed. Report verification results, observed token usage, elapsed time, retrieval failures, and any lost details. Compare with **[baseline task or measurements]**; do not infer savings from advertised benchmarks.
-
-Headroom caches originals for retrieval within its configured retention period. Keep source files and raw verification evidence available independently. Adopt it routinely only if comparable tasks use fewer tokens without worse correctness, retries, or completion time; reduced tokens alone do not establish lower billed cost.
-
-To roll back durable Codex wrapping, exit the trial session and run:
-
-```sh
-headroom unwrap codex
-```
-
-Then launch Codex normally and verify its routing and settings.
-
-Local validation with Headroom 0.37.0: installation succeeded, and a synthetic JSON report containing 300 test results compressed from 10,212 to 3,627 tokens (64.5% removed). The single failure remained visible and an explicitly cached original was retrieved exactly. This library check used `protect_recent=0` and disabled ML compression; it does not establish default proxy behavior, live Codex routing, or billed savings.
-
-Prioritize large test reports, repetitive logs, and structured search results for the first comparison. Keep failure learning in preview mode: the local preview could not complete because Codex CLI 0.147.0 was rejected for Astra, and its scan included sessions from other projects despite the project argument. Validate project scoping and update the CLI before using its recommendations. Do not apply generated workflow rules automatically.
-
-## GPT-6.1 Sol baseline and trial
-
-The operating rules live in `~/.codex/AGENTS.md`; these prompts are examples. Installed skill defaults must follow that policy, including its limits on mandatory approval steps and verification. Recheck conflicts after skill updates rather than editing cached plugin copies.
-
-[OpenAI’s model guidance](https://developers.openai.com/api/docs/guides/latest-model) supports explicit end-to-end execution, instruction audits, deliberate delegation, and proportional verification. This setup uses GPT-6.1 Sol at `high` reasoning effort by default, with GPT-6 Luna at `high` for research and code mapping.
-
-Our context workflow uses task-aware deliberate compaction with model-default automatic compaction as the safety net, without a custom token threshold. Preserve useful investigation evidence during active work, compact at safe boundaries when context quality or headroom warrants it, and continue from local checkpoints when needed. When the deferred benchmark is requested, compare repeated discovery, lost decisions, unnecessary questions, verification quality, completion time, and token or cost data across comparable substantial tasks. Adjust based on observed failures.
-
-## Daily cadence
-
-1. Describe one outcome with a concrete reference and observable success criteria.
-2. Resolve consequential decisions; plan only when explicitly requested.
-3. Continue through implementation and proportional verification.
-4. Preserve decisions in a checkpoint when needed and keep working in the same task.
-5. Report the result and perform only authorized Git delivery.
+This optional trial targets the Codex CLI. Existing desktop conversations are not validated by the CLI trial.
