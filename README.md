@@ -20,6 +20,7 @@ The Codex workflows I reuse, packaged as skills. Each folder under `skills/` con
 | [fullsend](skills/fullsend/SKILL.md) | "Evolve and merge this work" | Runs the shipping workflow through a protected merge. |
 | [solloop](skills/solloop/SKILL.md) | "Use solloop on this diff" | Uses one Sol High reviewer for up to three rounds of necessary fixes. |
 | [sharpen](skills/sharpen/SKILL.md) | "Sharpen this prompt" | Improves the request and its success checks before execution. |
+| [study-with-me](skills/study-with-me/SKILL.md) | "Study with me" | Gives a concise, complete explanation with architecture flowcharts, decisions, implementation, and reusable lessons. |
 | [blast](skills/blast/SKILL.md) | "Check the blast radius of this change" | Proves consequential safety assumptions against real code. |
 | [tdd](skills/tdd/SKILL.md) | "Use tdd for this bug" | Runs a focused regression check before and after the fix. |
 | [unslop](skills/unslop/SKILL.md) | "Unslop this text" | Removes filler, vague claims, jargon, and unnecessary dash punctuation. |

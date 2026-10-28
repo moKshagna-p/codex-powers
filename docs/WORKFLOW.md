@@ -116,3 +116,17 @@ Copy all folders for the simplest installation. If selecting individual skills, 
 | write | unslop |
 
 The remaining new skills run in the main agent without sibling workflows. Keep each adapted skill's bundled `LICENSE` when copying it. Git and model access remain requirements, not capabilities installation can create.
+
+## 17. Study the work
+
+> Study with me. Use $study-with-me for **[this repository, feature, or chat reference]**. Assume intermediate knowledge. Give me one complete, concise, layered explanation I can read at my own pace: what we are doing and why, success criteria and constraints, the stack and external tools, important decisions and alternatives, and how the implementation works through one connected example. Use a compact architecture flowchart when component relationships are central; let it show structure while the prose explains mechanisms and tradeoffs. Ground explanations in accessible code and conversation evidence; distinguish recorded reasons from inference. Help me apply each important principle in another project. Put any optional exercises and separate suggested answers at the end; do not pause for my responses.
+
+For a guided session instead:
+
+> Use $study-with-me to guide me through **[scope]** one lesson at a time. Start with an overview and one real example, then offer an optional prediction or teach-back question before continuing. Cover important decisions, implementation paths, failure cases, verification evidence, and reusable lessons.
+
+For a visual explanation:
+
+> Study with me through **[flow or decision]**. Use an architecture flowchart with component boxes, storage cylinders, and labeled arrows showing requests, data, and results. Follow **[visual reference, if supplied]**. Keep the prose concise and explain what the diagram cannot show. Add a comparison table only where useful. Show where the real code supports the explanation and when an alternative would be a better fit.
+
+The skill teaches through inspection and explanation. It does not change the project or install tools. Its [learning-methods reference](../skills/study-with-me/references/learning-methods.md) records the research and limits behind the teaching approach. Copy the entire skill folder so the reference travels with it.
