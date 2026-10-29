@@ -27,7 +27,7 @@ The Codex workflows I reuse, packaged as skills. Each folder under `skills/` con
 | [filepr](skills/filepr/SKILL.md) | "Use filepr for this branch" | Opens a concise PR without duplicating an existing one. |
 | [babysit](skills/babysit/SKILL.md) | "Babysit PR 123" | Handles CI and review feedback within the authorized scope. |
 
-Ordinary work keeps the existing single Sol reviewer where authorized. Evolve uses that reviewer in a bounded loop without adding an implementation team or review panel. "Evolve and implement" requests task branch commits, pushes, PR creation, and monitoring; "evolve and merge" also requests merging after the gate. Narrower instructions such as "local only" still apply.
+Ordinary work keeps the existing single Sol reviewer where authorized. New subagents default to fresh conversation context and a self-contained brief; related follow-ups reuse the same agent. Evolve uses that reviewer in a bounded loop without adding an implementation team or review panel. "Evolve and implement" requests task branch commits, pushes, PR creation, and monitoring; "evolve and merge" also requests merging after the gate. Narrower instructions such as "local only" still apply.
 
 Expanded requests ready to copy are in [docs/WORKFLOW.md](docs/WORKFLOW.md).
 

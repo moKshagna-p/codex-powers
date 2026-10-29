@@ -13,7 +13,7 @@ Run `git status --short`. Establish an explicit base and scoped paths, including
 
 Use at most three rounds across the whole delivery, including later CI fixes. Stop earlier on approval or only cosmetic findings. Extend only when the user explicitly requests it. Keep the record in session context, or an ignored `.codex/` checkpoint if needed; do not create tracked review ledgers.
 
-Give the reviewer the repository, base, intent, scope, relevant invariants, actual diff, surrounding code paths, and check results. It reads only: no edits, Git writes, PR comments, or children. Ask for an approval verdict and stable finding IDs with severity, file and line, concrete impact, and the smallest fix. Prioritize real correctness, security, regressions, and unnecessary expansion; omit style preferences.
+Start the reviewer with fresh conversation context and a self-contained brief covering the repository, base, intent, scope, constraints, relevant invariants, actual diff, surrounding code paths, and check results. Disclose if the host cannot exclude parent history. It reads only: no edits, Git writes, PR comments, or children. Ask for an approval verdict and stable finding IDs with severity, file and line, concrete impact, and the smallest fix. Prioritize real correctness, security, regressions, and unnecessary expansion; omit style preferences.
 
 Wait for that reviewer before editing scoped files. Reuse its native ID for followups. Never overlap reviewers or add a normal review pass on top. A timeout or error is not approval; confirm a failed reviewer has stopped before restarting within budget.
 

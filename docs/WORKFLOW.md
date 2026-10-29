@@ -36,7 +36,7 @@ To establish shared design documentation:
 
 When you want an independent review and minimal corrections:
 
-> Use $verify to have a GPT-6.1 Sol High subagent review **[diff or paths]** against **[acceptance criteria]** without editing files. This authorizes one reviewer and one initial review pass. Apply justified fixes and rerun checks; use solloop when iterative review is requested. Request concrete defects and the smallest necessary fixes. Check each finding, apply only necessary corrections within scope, and rerun affected checks. Avoid speculative features or content expansion. Report if that model or independent review is unavailable.
+> Use $verify to have a GPT-6.1 Sol High subagent review **[diff or paths]** against **[acceptance criteria]** without editing files. Start the reviewer with fresh conversation context and a self-contained brief. This authorizes one reviewer and one initial review pass. Apply justified fixes and rerun checks; use solloop when iterative review is requested. Request concrete defects and the smallest necessary fixes. Check each finding, apply only necessary corrections within scope, and rerun affected checks. Avoid speculative features or content expansion. Report if that model or independent review is unavailable.
 
 ## 6. Write clearly
 
@@ -48,7 +48,7 @@ When you want an independent review and minimal corrections:
 
 ## 8. Authorize delegation when useful
 
-> Use $delegate to complete **[outcome]** with **[acceptance criteria]**, starting from **[paths or sources]**. You may delegate bounded independent work; use no agents for trivial work, usually one or two when useful, at most three concurrent children, and no nested delegation. Assign explicit ownership and preserve others' edits. Keep consequential decisions, integration, and final verification with the lead. Do not create plan files or perform Git delivery unless requested.
+> Use $delegate to complete **[outcome]** with **[acceptance criteria]**, starting from **[paths or sources]**. You may delegate bounded independent work; use no agents for trivial work, usually one or two when useful, at most three concurrent children, and no nested delegation. Start new children with fresh conversation context and self-contained briefs; reuse them for related follow-ups. Assign explicit ownership and preserve others' edits. Keep consequential decisions, integration, and final verification with the lead. Do not create plan files or perform Git delivery unless requested.
 
 The skill bundles [Codex configuration examples](../skills/delegate/assets/codex/). Request configuration changes separately when needed; preserve existing settings and customizations.
 
@@ -72,7 +72,7 @@ This optional trial targets the Codex CLI. Existing desktop conversations are no
 
 ## 11. Sol review loop
 
-> Use $solloop to review **[diff or paths]** against **[acceptance criteria]** with GPT-6.1 Sol at high reasoning. Use one reviewer, at most three rounds, and no reviewer children. Apply only justified minimal fixes. Report unresolved issues or unavailable Sol access rather than substituting a model.
+> Use $solloop to review **[diff or paths]** against **[acceptance criteria]** with GPT-6.1 Sol at high reasoning. Start one reviewer with fresh conversation context and a self-contained brief, then reuse it for at most three rounds, with no reviewer children. Apply only justified minimal fixes. Report unresolved issues or unavailable Sol access rather than substituting a model.
 
 Round one covers the scoped change. Later rounds cover meaningful changes and unresolved findings, stopping early on approval or only cosmetic feedback. The same budget covers later CI fixes during Evolve. Normal work can keep the single review prompt in section 5; do not run both independently on the same delivery.
 

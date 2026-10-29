@@ -11,7 +11,7 @@ Read the acceptance criteria and actual diff, then inspect affected callers and 
 - Use [blast](../blast/SKILL.md) when safety depends on indirect callers or a consequential assumption beyond the diff.
 - Read the complete relevant results before claiming success. Distinguish checks run from assumptions and unavailable checks.
 - Repeat passing checks only after new changes or a concrete unresolved concern.
-- When independent review is requested or required by risk, use an authorized reviewer. Give it the criteria, diff, relevant paths, and verification evidence. Ask for defects supported by evidence and the smallest fixes; omit style preferences and speculative expansion.
+- When independent review is requested or required by risk, start an authorized reviewer with fresh conversation context. Give it a self-contained brief covering the objective, constraints, permissions, criteria, diff, relevant paths, and verification evidence. Disclose if the host cannot exclude parent history. Ask for defects supported by evidence and the smallest fixes; omit style preferences and speculative expansion.
 - Assess each finding against the implementation, apply necessary fixes within the authorized scope, and rerun affected checks. Reviewing your own work does not satisfy independent review; report missing required review as outstanding.
 
 Report actual results and remaining gaps. Checking readiness does not authorize commits, pushes, merges, or pull requests; perform only requested Git delivery.
