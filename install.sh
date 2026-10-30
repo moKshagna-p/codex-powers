@@ -9,6 +9,16 @@ claude="$HOME/.claude"
 backup="$HOME/.agents/mo-stack-backup-$(date +%Y%m%d%H%M%S)"
 
 mkdir -p "$agents"
+# Remove skills an earlier mo-stack install left behind under old or deleted names.
+for old in "$agents"/*/; do
+  name="$(basename "$old")"
+  if [ -f "$old/.mo-stack" ] && [ ! -d "$src/$name" ]; then
+    rm -rf "$old"
+    [ -L "$claude/skills/$name" ] && rm "$claude/skills/$name"
+    echo "removed old $name"
+  fi
+done
+
 for dir in "$src"/*/; do
   name="$(basename "$dir")"
   dest="$agents/$name"
