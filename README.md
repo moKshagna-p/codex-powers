@@ -11,6 +11,7 @@ The Codex workflows I reuse, packaged as skills. Each folder under `skills/` con
 | [browser](skills/browser/SKILL.md) | "Use browser" | Automates a website with the installed Agent Browser CLI. |
 | [debug](skills/debug/SKILL.md) | "Use debug" | Proves the cause, applies the smallest fix, and checks it. |
 | [verify](skills/verify/SKILL.md) | "Use verify" | Checks existing work and handles authorized independent review. |
+| [review](skills/review/SKILL.md) | "Review this diff" | Investigates bugs and improvements, with prioritized evidence and precise fix handoffs. |
 | [write](skills/write/SKILL.md) | "Use write" | Rewrites a professional message for its audience. |
 | [checkpoint](skills/checkpoint/SKILL.md) | "Use checkpoint" | Saves a concise checkpoint and resumes the same task. |
 | [delegate](skills/delegate/SKILL.md) | "Use delegate" | Coordinates authorized specialists and includes optional Codex presets. |
@@ -30,6 +31,8 @@ The Codex workflows I reuse, packaged as skills. Each folder under `skills/` con
 Ordinary work keeps the existing single Sol reviewer where authorized. New subagents default to fresh conversation context and a self-contained brief; related follow-ups reuse the same agent. Evolve uses that reviewer in a bounded loop without adding an implementation team or review panel. "Evolve and implement" requests task branch commits, pushes, PR creation, and monitoring; "evolve and merge" also requests merging after the gate. Narrower instructions such as "local only" still apply.
 
 Expanded requests ready to copy are in [docs/WORKFLOW.md](docs/WORKFLOW.md).
+
+`review` is the shared investigation and reporting method used by `verify` and `solloop`. It reports by default and fixes only when requested. Ask for an independent reviewer to use fresh context; direct use in the current agent remains available. It requires no Greptile account. Detection quality against Greptile has not been benchmarked.
 
 ## Install
 

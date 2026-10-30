@@ -111,11 +111,12 @@ Copy all folders for the simplest installation. If selecting individual skills, 
 | evolve | fullstop and fullsend |
 | fullstop | fullsend |
 | fullsend | implement, verify, solloop, filepr, and babysit |
-| verify | blast for indirect safety checks; solloop when Evolve owns review |
+| verify | review; blast for indirect safety checks; solloop when Evolve owns review |
+| solloop | review |
 | debug | tdd |
 | write | unslop |
 
-The remaining new skills run in the main agent without sibling workflows. Keep each adapted skill's bundled `LICENSE` when copying it. Git and model access remain requirements, not capabilities installation can create.
+`review` runs without sibling skills for a single pass; install `solloop` too only for its optional iterative workflow. Other standalone skills run in the main agent unless authorized delegation is requested. Keep each adapted skill's bundled `LICENSE` when copying it. Git and model access remain requirements, not capabilities installation can create.
 
 ## 17. Study the work
 
@@ -130,3 +131,17 @@ For a visual explanation:
 > Study with me through **[flow or decision]**. Use an architecture flowchart with component boxes, storage cylinders, and labeled arrows showing requests, data, and results. Follow **[visual reference, if supplied]**. Keep the prose concise and explain what the diagram cannot show. Add a comparison table only where useful. Show where the real code supports the explanation and when an alternative would be a better fit.
 
 The skill teaches through inspection and explanation. It does not change the project or install tools. Its [learning-methods reference](../skills/study-with-me/references/learning-methods.md) records the research and limits behind the teaching approach. Copy the entire skill folder so the reference travels with it.
+
+## 18. Review with evidence and a fix handoff
+
+> Use $review on **[PR URL, branch/base, local changes, or explicit paths]** against **[requirements or reference]**. Review only. Return prioritized defects with the trigger, failure path, proof status, precise locations, minimal fix scope, and regression checks. Separate concrete improvements from bugs and unresolved questions. Include a copyable fix handoff and review snapshot so another agent can resume without repeating the investigation.
+
+For an independent pass:
+
+> Use $review with one GPT-6.1 Sol High reviewer in fresh conversation context on **[target]** against **[requirements]**. This authorizes one read-only reviewer and one review pass. Give it a self-contained brief and repository access. Return the shared report and fix packets; do not edit code or perform Git delivery.
+
+To apply selected findings afterward:
+
+> Fix **[R1, R2]** from **[review report]** within **[scope]**. Verify that the snapshot and affected contracts still match, reread the exact edit targets, then use the existing fix packets. Reopen investigation only where evidence is stale or incomplete. Run the specified regression checks and report outcomes. No commits, pushes, or PR comments.
+
+`review` supplies the method for `verify` and `solloop`; it does not add another review pass. Improvements are nonblocking unless an explicit requirement makes them necessary. Reviews label reproduced versus source-traced evidence and disclose missing coverage; they do not invent a readiness score. This standalone method needs no Greptile service, and its detection quality has not been benchmarked against Greptile.
