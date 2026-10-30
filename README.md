@@ -1,6 +1,6 @@
-# Codex Powers
+# mo-stack
 
-The Codex workflows I reuse, packaged as skills. Each folder under `skills/` contains a `SKILL.md` and any resources it needs, following [tstack](https://github.com/t3dotgg/tstack)'s structure, with selected solo workflows adapted from [pstack](https://github.com/cursor/plugins/tree/main/pstack).
+The agentic workflows I reuse, packaged as skills. Each folder under `skills/` contains a `SKILL.md` and any resources it needs, following [tstack](https://github.com/t3dotgg/tstack)'s structure, with selected solo workflows adapted from [pstack](https://github.com/cursor/plugins/tree/main/pstack).
 
 ## Skills
 
