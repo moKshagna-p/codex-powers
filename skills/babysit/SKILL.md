@@ -17,7 +17,7 @@ Read only and local only requests do not authorize changing remote settings or p
 
 Use one host supported PR watcher when available. Otherwise `gh pr checks <pr> --watch --required --fail-fast` can wait for required CI checks. That command does not watch every review or approval: inspect those separately afterward. Do not build custom polling scripts, start multiple watchers, or create recurring automations without authorization. If no supported mechanism can wait for a missing approval or review, report the precise waiting state rather than claiming readiness or continued monitoring.
 
-Apply only justified fixes within scope, verify them, and push only under the existing task grant. Behavior changes need updated proof and any required Sol followup within the original review budget. A red check, missing approval, unknown status, or unresolved material finding prevents readiness.
+Apply only justified fixes within scope, verify them, and push only under the existing task grant, with no AI `Co-Authored-By` trailers in commits. Behavior changes need updated proof and any required reviewloop followup within the original review budget. A red check, missing approval, unknown status, or unresolved material finding prevents readiness.
 
 Post replies or resolve threads only when the user authorized handling that feedback. Explain rejected findings with evidence, preserve privacy, and verify a reply succeeded before resolving its thread. Do not buy or require additional review bots.
 

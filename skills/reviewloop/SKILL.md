@@ -1,17 +1,17 @@
 ---
-name: solloop
-description: Use when the user requests sol loop or solloop, or when an explicitly invoked evolve shipping workflow requires bounded Sol review.
+name: reviewloop
+description: Use when the user requests a review loop, reviewloop, sol loop, or solloop, or when an explicitly invoked evolve shipping workflow requires bounded independent review.
 ---
 
-# Sol review loop
+# Review loop
 
-Use one native `gpt-6.1-sol` reviewer at `high` reasoning, unless the user explicitly selected another Sol version or effort. Verify the actual role/model configuration. If the selected Sol route is unavailable, report independent review as blocked. Do not substitute another provider or provision access.
+Use one native subagent reviewer on the host's strongest available model at high reasoning, unless the user explicitly selected a model or effort. Verify the actual role/model configuration. If the host cannot start an independent reviewer or the selected model is unavailable, report independent review as blocked. Do not silently substitute a weaker model, switch provider, or provision access.
 
 ## Bound the review
 
 Run `git status --short`. Establish an explicit base and scoped paths, including relevant untracked files, and preserve unrelated work. Use the same base and scope throughout. Run covering checks before review; disclose unavailable and preexisting failures.
 
-Use at most three rounds across the whole delivery, including later CI fixes. Stop earlier on approval or only cosmetic findings. Extend only when the user explicitly requests it. Keep the record in session context, or an ignored `.codex/` checkpoint if needed; do not create tracked review ledgers.
+Use at most three rounds across the whole delivery, including later CI fixes. Stop earlier on approval or only cosmetic findings. Extend only when the user explicitly requests it. Keep the record in session context, or an ignored `.mo-stack/` checkpoint if needed; do not create tracked review ledgers.
 
 Start the reviewer with fresh conversation context and a self-contained brief covering the repository, base, intent, scope, constraints, relevant invariants, actual diff, surrounding code paths, and check results. Give it [review](../review/SKILL.md) for investigation and the report/fix-packet contract; keep that evidence map and stable finding IDs throughout the loop. Disclose if the host cannot exclude parent history. It reads only: no edits, Git writes, PR comments, or children.
 

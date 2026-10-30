@@ -10,6 +10,6 @@ coverage/
 worktrees/
 
 # Local agent work; never commit or push.
-/.codex/
+/.mo-stack/
 /docs/plans/
 /docs/superpowers/

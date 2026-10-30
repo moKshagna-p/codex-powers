@@ -7,7 +7,7 @@ description: Use when a long task needs a checkpoint before compaction or must r
 
 Keep one outcome in the same task. Compact at a safe boundary when a milestone is complete, repetitive output dominates, or context headroom is low; retain useful evidence during active investigation.
 
-Finish the current atomic step before writing a concise checkpoint under `.codex/handoffs/`. Ensure `/.codex/` is excluded through `.git/info/exclude`. Record only:
+Finish the current atomic step before writing a concise checkpoint under `.mo-stack/handoffs/`. Ensure `/.mo-stack/` is excluded through `.git/info/exclude`. Record only:
 
 - Objective, acceptance criteria, and settled decisions.
 - Git state and changed files.

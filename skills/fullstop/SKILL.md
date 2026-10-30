@@ -5,7 +5,7 @@ description: Use only when the user explicitly requests full stop, fullstop, or 
 
 # Full stop
 
-Read [fullsend](../fullsend/SKILL.md) and execute its preparation mode. Its implementation, proof, Sol review, PR, and CI requirements apply; its merge step never does.
+Read [fullsend](../fullsend/SKILL.md) and execute its preparation mode. Its implementation, proof, independent review, PR, and CI requirements apply; its merge step never does.
 
 When the user limits work to local changes, do not modify remote PR settings or perform delivery; finish authorized local work and report that no ready PR can be claimed. Otherwise, apply [the automation guard](../babysit/SKILL.md#prevent-unintended-merging) before starting and before every push. Keep the PR unable to merge automatically; block further publication if that cannot be confirmed.
 
